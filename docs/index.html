@@ -3,60 +3,116 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="theme-color" content="#0b1220"/>
-  <title>GraTech • Comet‑X | Sovereign Dashboard</title>
+  <meta name="theme-color" content="#070a12"/>
+  <title>GraTech • Comet‑X | Sovereign Control Room</title>
 
-  <!-- Tailwind -->
+  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Fonts -->
+  <!-- Fonts: Arabic + Latin -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg0:#070a12; --bg1:#0b1220; --card:rgba(255,255,255,.06);
-      --stroke:rgba(148,163,184,.18); --glow:rgba(34,211,238,.18);
+      --bg0:#050812;
+      --bg1:#070a12;
+      --panel:rgba(255,255,255,.06);
+      --stroke:rgba(148,163,184,.18);
+      --text:rgba(226,232,240,.92);
+      --muted:rgba(226,232,240,.72);
+      --faint:rgba(226,232,240,.55);
+      --neon:#22d3ee;
+      --violet:#a78bfa;
+      --emerald:#34d399;
+      --rose:#fb7185;
+      --amber:#fbbf24;
     }
-    body{font-family:Tajawal,Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-    .glass{background:var(--card); border:1px solid var(--stroke); backdrop-filter: blur(10px)}
-    .soft{box-shadow: 0 18px 60px rgba(0,0,0,.35)}
-    .gridfx{
+
+    html{ scroll-behavior:smooth; }
+    body{
+      font-family: Tajawal, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: var(--text);
       background:
         radial-gradient(900px 600px at 20% 10%, rgba(34,211,238,.18), transparent 55%),
-        radial-gradient(900px 600px at 80% 20%, rgba(167,139,250,.14), transparent 55%),
-        radial-gradient(900px 600px at 40% 90%, rgba(16,185,129,.10), transparent 55%),
+        radial-gradient(900px 600px at 80% 15%, rgba(167,139,250,.16), transparent 55%),
+        radial-gradient(900px 600px at 50% 90%, rgba(52,211,153,.10), transparent 55%),
         linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
     }
-    .chip{border:1px solid rgba(148,163,184,.22)}
-    .tab-active{border-bottom:3px solid rgb(34,211,238); color: rgb(34,211,238); font-weight:800}
-    .tab-idle{color: rgba(226,232,240,.72)}
-    .fade{animation: fade .35s ease-out}
-    @keyframes fade {from{opacity:.0; transform: translateY(10px)} to{opacity:1; transform: translateY(0)}}
-    .kbd{border:1px solid rgba(148,163,184,.25); background: rgba(255,255,255,.06); padding:2px 8px; border-radius: 8px}
+
+    /* Typography system (not random) */
+    .t-display{ font-weight:900; letter-spacing:-.02em; line-height:1.05; font-size: clamp(2rem, 3.8vw, 3.5rem); }
+    .t-h1{ font-weight:900; letter-spacing:-.01em; line-height:1.12; font-size: clamp(1.5rem, 2.4vw, 2.2rem); }
+    .t-h2{ font-weight:800; letter-spacing:-.01em; line-height:1.15; font-size: clamp(1.15rem, 1.8vw, 1.5rem); }
+    .t-body{ font-size: 1.02rem; line-height: 1.85; color: var(--muted); }
+    .t-small{ font-size: .86rem; line-height: 1.7; color: var(--faint); }
+
+    .glass{ background: var(--panel); border: 1px solid var(--stroke); backdrop-filter: blur(10px); }
+    .soft{ box-shadow: 0 22px 75px rgba(0,0,0,.35); }
+    .chip{ border:1px solid rgba(148,163,184,.22); background: rgba(255,255,255,.04); }
+    .chip:hover{ background: rgba(255,255,255,.08); }
+
+    .tab-active{ border-bottom: 3px solid var(--neon); color: var(--neon); font-weight: 900; }
+    .tab-idle{ color: rgba(226,232,240,.70); }
+    .fade{ animation: fade .35s ease-out; }
+    @keyframes fade{ from{ opacity:0; transform: translateY(10px);} to{ opacity:1; transform: translateY(0);} }
+
+    /* Better RTL/LTR spacing */
+    [dir="rtl"] .list-pad { padding-right: 1.2rem; padding-left: 0; }
+    [dir="ltr"] .list-pad { padding-left: 1.2rem; padding-right: 0; }
+
+    .kbd{
+      border:1px solid rgba(148,163,184,.25);
+      background: rgba(255,255,255,.06);
+      padding:2px 8px;
+      border-radius: 10px;
+      font-size: .78rem;
+      color: rgba(226,232,240,.85);
+    }
+
+    /* Timeline */
+    .timeline{ position: relative; }
+    .timeline:before{
+      content:"";
+      position:absolute;
+      top:.5rem; bottom:.5rem;
+      width:2px;
+      background: rgba(148,163,184,.20);
+      right: 1rem;
+    }
+    [dir="ltr"] .timeline:before{ left: 1rem; right:auto; }
+    .tl-item{ position: relative; padding: 1rem 1rem 1rem 3rem; }
+    [dir="ltr"] .tl-item{ padding: 1rem 3rem 1rem 1rem; }
+    .dot{
+      position:absolute;
+      width: 12px; height: 12px;
+      background: var(--neon);
+      box-shadow: 0 0 0 5px rgba(34,211,238,.14);
+      border-radius: 999px;
+      top: 1.35rem;
+      right: .6rem;
+    }
+    [dir="ltr"] .dot{ left: .6rem; right:auto; }
   </style>
 
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
-          colors: {
-            ink: '#0b1220',
-            neon: '#22d3ee'
-          }
+          colors: { neon: '#22d3ee' }
         }
       }
     }
   </script>
 </head>
 
-<body class="min-h-screen gridfx text-slate-100">
-  <!-- Top bar -->
+<body>
+  <!-- Top -->
   <header class="sticky top-0 z-50">
     <div class="mx-auto max-w-6xl px-4 py-4">
       <div class="glass soft rounded-2xl px-4 py-3 flex items-center justify-between">
@@ -72,101 +128,133 @@
         </div>
 
         <div class="flex items-center gap-2">
-          <button id="btnLang" class="chip px-3 py-2 rounded-xl text-sm hover:bg-white/10 transition">
-            AR / EN
-          </button>
-          <button id="btnTheme" class="chip px-3 py-2 rounded-xl text-sm hover:bg-white/10 transition">
-            🌙
-          </button>
-          <a id="btnLive" class="chip px-3 py-2 rounded-xl text-sm hover:bg-white/10 transition" target="_blank" rel="noopener">
-            Live ↗
-          </a>
+          <button id="btnLang" class="chip px-3 py-2 rounded-xl text-sm transition">AR / EN</button>
+          <a id="btnLive" class="chip px-3 py-2 rounded-xl text-sm transition" target="_blank" rel="noopener">Live ↗</a>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Main -->
   <main class="mx-auto max-w-6xl px-4 pb-16">
     <!-- Hero -->
     <section class="mt-6 glass soft rounded-3xl p-6 md:p-10">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
         <div class="max-w-3xl">
-          <h1 id="heroTitle" class="text-3xl md:text-5xl font-black leading-tight"></h1>
-          <p id="heroSub" class="mt-4 text-slate-200 text-base md:text-lg"></p>
+          <h1 id="heroTitle" class="t-display"></h1>
+          <p id="heroSub" class="mt-5 t-body"></p>
 
           <div class="mt-6 flex flex-wrap gap-2">
-            <span class="chip px-3 py-1.5 rounded-full text-xs text-slate-200">SOVEREIGN</span>
-            <span class="chip px-3 py-1.5 rounded-full text-xs text-slate-200">RTL/LTR</span>
-            <span class="chip px-3 py-1.5 rounded-full text-xs text-slate-200">Chart.js</span>
-            <span class="chip px-3 py-1.5 rounded-full text-xs text-slate-200">Static Pages</span>
+            <span class="chip px-3 py-1.5 rounded-full text-xs">SOVEREIGN</span>
+            <span class="chip px-3 py-1.5 rounded-full text-xs">Cognitive Rights</span>
+            <span class="chip px-3 py-1.5 rounded-full text-xs">Open Protocols</span>
+            <span class="chip px-3 py-1.5 rounded-full text-xs">Agents</span>
+            <span class="chip px-3 py-1.5 rounded-full text-xs">Metrics</span>
           </div>
 
           <div class="mt-6 text-sm text-slate-300">
             <span id="quoteLine"></span>
             <span class="mx-2">•</span>
-            <span class="kbd">Tabs</span>
-            <span class="kbd">Charts</span>
-            <span class="kbd">Multi‑Lang</span>
+            <span class="kbd" id="kbd1"></span>
+            <span class="kbd" id="kbd2"></span>
+            <span class="kbd" id="kbd3"></span>
           </div>
         </div>
 
-        <div class="w-full md:w-[360px]">
+        <!-- KPI panel -->
+        <aside class="w-full md:w-[380px] glass rounded-2xl p-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <div id="kpiTitle" class="text-xs text-slate-300"></div>
+              <div class="text-2xl font-black text-cyan-300">SOVEREIGN ONLINE</div>
+              <div class="mt-1 text-xs text-slate-400" id="buildLine"></div>
+            </div>
+            <div class="text-3xl">🛰️</div>
+          </div>
+
+          <div class="mt-4 grid grid-cols-3 gap-3">
+            <div class="glass rounded-xl p-3">
+              <div class="text-[11px] text-slate-300" id="kpi1Label"></div>
+              <div class="text-lg font-extrabold" id="kpi1Val"></div>
+            </div>
+            <div class="glass rounded-xl p-3">
+              <div class="text-[11px] text-slate-300" id="kpi2Label"></div>
+              <div class="text-lg font-extrabold" id="kpi2Val"></div>
+            </div>
+            <div class="glass rounded-xl p-3">
+              <div class="text-[11px] text-slate-300" id="kpi3Label"></div>
+              <div class="text-lg font-extrabold" id="kpi3Val"></div>
+            </div>
+          </div>
+
+          <div class="mt-4 t-small" id="kpiFoot"></div>
+
+          <div class="mt-4 grid grid-cols-2 gap-3">
+            <a href="#principles" class="chip rounded-xl px-4 py-3 text-sm transition">Principles ↓</a>
+            <a href="#roadmap" class="chip rounded-xl px-4 py-3 text-sm transition">Roadmap ↓</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Principles / manifesto detail -->
+    <section id="principles" class="mt-8 grid md:grid-cols-3 gap-4">
+      <div class="glass soft rounded-2xl p-6 md:col-span-2">
+        <div class="t-h1 text-white" id="manifestoTitle"></div>
+        <p class="mt-3 t-body" id="manifestoBody"></p>
+
+        <div class="mt-6 grid sm:grid-cols-2 gap-4">
           <div class="glass rounded-2xl p-5">
-            <div class="flex items-center justify-between">
-              <div>
-                <div id="kpiTitle" class="text-xs text-slate-300"></div>
-                <div class="text-2xl font-black text-cyan-300">SOVEREIGN ONLINE</div>
-              </div>
-              <div class="text-3xl">🛰️</div>
-            </div>
-            <div class="mt-4 grid grid-cols-3 gap-3">
-              <div class="glass rounded-xl p-3">
-                <div class="text-[11px] text-slate-300" id="kpi1Label"></div>
-                <div class="text-lg font-extrabold" id="kpi1Val"></div>
-              </div>
-              <div class="glass rounded-xl p-3">
-                <div class="text-[11px] text-slate-300" id="kpi2Label"></div>
-                <div class="text-lg font-extrabold" id="kpi2Val"></div>
-              </div>
-              <div class="glass rounded-xl p-3">
-                <div class="text-[11px] text-slate-300" id="kpi3Label"></div>
-                <div class="text-lg font-extrabold" id="kpi3Val"></div>
-              </div>
-            </div>
-            <div class="mt-4 text-xs text-slate-400" id="kpiFoot"></div>
+            <div class="t-h2 text-cyan-300" id="p1Title"></div>
+            <p class="mt-2 t-small" id="p1Body"></p>
+          </div>
+          <div class="glass rounded-2xl p-5">
+            <div class="t-h2 text-cyan-300" id="p2Title"></div>
+            <p class="mt-2 t-small" id="p2Body"></p>
+          </div>
+          <div class="glass rounded-2xl p-5">
+            <div class="t-h2 text-cyan-300" id="p3Title"></div>
+            <p class="mt-2 t-small" id="p3Body"></p>
+          </div>
+          <div class="glass rounded-2xl p-5">
+            <div class="t-h2 text-cyan-300" id="p4Title"></div>
+            <p class="mt-2 t-small" id="p4Body"></p>
           </div>
         </div>
+      </div>
+
+      <div class="glass soft rounded-2xl p-6">
+        <div class="t-h1 text-white" id="threatTitle"></div>
+        <ul class="mt-4 text-sm text-slate-200 list-disc list-pad space-y-2" id="threatList"></ul>
+        <div class="mt-4 text-xs text-slate-400" id="threatFoot"></div>
       </div>
     </section>
 
     <!-- Tabs -->
-    <section class="mt-8">
+    <section class="mt-10">
       <div class="glass soft rounded-2xl px-4 py-3">
         <div class="flex gap-4 overflow-x-auto whitespace-nowrap">
           <button class="tab tab-active px-4 py-2" data-tab="identity" id="tabIdentity"></button>
           <button class="tab tab-idle px-4 py-2" data-tab="architecture" id="tabArchitecture"></button>
-          <button class="tab tab-idle px-4 py-2" data-tab="roadmap" id="tabRoadmap"></button>
+          <button class="tab tab-idle px-4 py-2" data-tab="roadmapTab" id="tabRoadmap"></button>
           <button class="tab tab-idle px-4 py-2" data-tab="impact" id="tabImpact"></button>
         </div>
       </div>
 
-      <!-- Views -->
       <div class="mt-4">
         <!-- Identity -->
         <div id="view-identity" class="view fade">
           <div class="grid md:grid-cols-3 gap-4">
             <div class="glass rounded-2xl p-5 hover:bg-white/10 transition cursor-pointer" onclick="openModal('identity_core')">
               <div class="text-cyan-300 font-extrabold" id="card1Title"></div>
-              <div class="mt-2 text-sm text-slate-200" id="card1Body"></div>
+              <div class="mt-2 t-small" id="card1Body"></div>
             </div>
             <div class="glass rounded-2xl p-5 hover:bg-white/10 transition cursor-pointer" onclick="openModal('identity_threats')">
               <div class="text-cyan-300 font-extrabold" id="card2Title"></div>
-              <div class="mt-2 text-sm text-slate-200" id="card2Body"></div>
+              <div class="mt-2 t-small" id="card2Body"></div>
             </div>
             <div class="glass rounded-2xl p-5 hover:bg-white/10 transition cursor-pointer" onclick="openModal('identity_response')">
               <div class="text-cyan-300 font-extrabold" id="card3Title"></div>
-              <div class="mt-2 text-sm text-slate-200" id="card3Body"></div>
+              <div class="mt-2 t-small" id="card3Body"></div>
             </div>
           </div>
 
@@ -184,17 +272,20 @@
         <!-- Architecture -->
         <div id="view-architecture" class="view hidden fade">
           <div class="grid md:grid-cols-3 gap-4">
-            <div class="glass rounded-2xl p-5">
+            <div class="glass rounded-2xl p-6">
               <div class="font-black text-cyan-300" id="archA"></div>
-              <ul class="mt-3 text-sm text-slate-200 list-disc pr-6" id="archAList"></ul>
+              <p class="mt-2 t-small" id="archADesc"></p>
+              <ul class="mt-3 text-sm text-slate-200 list-disc list-pad space-y-1.5" id="archAList"></ul>
             </div>
-            <div class="glass rounded-2xl p-5">
+            <div class="glass rounded-2xl p-6">
               <div class="font-black text-cyan-300" id="archB"></div>
-              <ul class="mt-3 text-sm text-slate-200 list-disc pr-6" id="archBList"></ul>
+              <p class="mt-2 t-small" id="archBDesc"></p>
+              <ul class="mt-3 text-sm text-slate-200 list-disc list-pad space-y-1.5" id="archBList"></ul>
             </div>
-            <div class="glass rounded-2xl p-5">
+            <div class="glass rounded-2xl p-6">
               <div class="font-black text-cyan-300" id="archC"></div>
-              <ul class="mt-3 text-sm text-slate-200 list-disc pr-6" id="archCList"></ul>
+              <p class="mt-2 t-small" id="archCDesc"></p>
+              <ul class="mt-3 text-sm text-slate-200 list-disc list-pad space-y-1.5" id="archCList"></ul>
             </div>
           </div>
 
@@ -209,20 +300,24 @@
           </div>
         </div>
 
-        <!-- Roadmap -->
-        <div id="view-roadmap" class="view hidden fade">
-          <div class="glass rounded-2xl p-6">
-            <div class="font-black text-cyan-300 text-xl" id="roadTitle"></div>
-            <ol class="mt-4 text-slate-200 list-decimal pr-6 space-y-2" id="roadList"></ol>
-          </div>
+        <!-- Roadmap Tab -->
+        <div id="view-roadmapTab" class="view hidden fade">
+          <div id="roadmap" class="grid md:grid-cols-2 gap-4">
+            <div class="glass soft rounded-2xl p-6">
+              <div class="t-h1 text-white" id="roadTitle"></div>
+              <p class="mt-3 t-body" id="roadIntro"></p>
 
-          <div class="mt-6 glass rounded-2xl p-4">
-            <div class="flex items-center justify-between mb-3">
-              <div class="font-black" id="chart3Title"></div>
-              <div class="text-xs text-slate-300" id="chart3Hint"></div>
+              <div class="mt-5 timeline" id="roadTimeline"></div>
             </div>
-            <div class="h-[320px]">
-              <canvas id="chartRoadmap"></canvas>
+
+            <div class="glass rounded-2xl p-4">
+              <div class="flex items-center justify-between mb-3">
+                <div class="font-black" id="chart3Title"></div>
+                <div class="text-xs text-slate-300" id="chart3Hint"></div>
+              </div>
+              <div class="h-[360px]">
+                <canvas id="chartRoadmap"></canvas>
+              </div>
             </div>
           </div>
         </div>
@@ -232,11 +327,13 @@
           <div class="grid md:grid-cols-2 gap-4">
             <div class="glass rounded-2xl p-6">
               <div class="font-black text-cyan-300" id="impactEcoTitle"></div>
-              <div class="mt-2 text-slate-200 text-sm" id="impactEcoBody"></div>
+              <p class="mt-2 t-small" id="impactEcoBody"></p>
+              <div class="mt-4 grid grid-cols-3 gap-2" id="impactEcoKpis"></div>
             </div>
             <div class="glass rounded-2xl p-6">
               <div class="font-black text-cyan-300" id="impactSocTitle"></div>
-              <div class="mt-2 text-slate-200 text-sm" id="impactSocBody"></div>
+              <p class="mt-2 t-small" id="impactSocBody"></p>
+              <div class="mt-4 grid grid-cols-3 gap-2" id="impactSocKpis"></div>
             </div>
           </div>
 
@@ -249,16 +346,20 @@
               <canvas id="chartImpact"></canvas>
             </div>
           </div>
-        </div>
 
+          <div class="mt-6 glass rounded-2xl p-6">
+            <div class="t-h1 text-white" id="faqTitle"></div>
+            <div class="mt-4 space-y-3" id="faq"></div>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- Footer -->
-    <footer class="mt-10 text-center text-sm text-slate-400">
-      <div class="glass rounded-2xl py-6 soft">
+    <footer class="mt-10 text-center">
+      <div class="glass soft rounded-2xl py-6">
         <div class="font-black text-slate-100" id="footerLine"></div>
-        <div class="mt-2 font-mono text-xs">GrAtechX • Comet‑X • v1.0.0‑Manifesto</div>
+        <div class="mt-2 text-xs text-slate-400 font-mono">GrAtechX • Comet‑X • v1.1 • Sovereign Control Room</div>
       </div>
     </footer>
   </main>
@@ -269,7 +370,7 @@
       <div class="flex items-start justify-between gap-4">
         <div>
           <div id="modalTitle" class="text-xl font-black text-cyan-300"></div>
-          <div id="modalBody" class="mt-3 text-slate-200 text-sm leading-relaxed"></div>
+          <div id="modalBody" class="mt-3 t-body"></div>
         </div>
         <button id="modalClose" class="chip px-3 py-2 rounded-xl hover:bg-white/10 transition">✕</button>
       </div>
@@ -277,197 +378,302 @@
   </div>
 
 <script>
-  const SITE = {
-    owner: "KHAWRIZM",
-    repo: "cometx-manifesto",
-    liveUrl: "https://khawrizm.github.io/cometx-manifesto/"
-  };
+  const SITE = { liveUrl: "https://khawrizm.github.io/cometx-manifesto/" };
 
-  // i18n
   const I18N = {
     ar: {
-      statusLine: "SYSTEM STATUS: SOVEREIGN ONLINE • مشروع صفحات ثابتة — بدون بناء",
-      heroTitle: "لوحة القيادة السيادية",
-      heroSub: "واجهة تفاعلية متعددة اللغات لاسترداد السيادة المعرفية: هوية • معمارية • مسار • أثر.",
-      quoteLine: "«أنت لا تكتب برنامجاً… أنت تكتب التاريخ.»",
+      statusLine: "SOVEREIGN ONLINE • لوحة سيادية متعددة اللغات • صفحات ثابتة بدون بناء",
+      heroTitle: "غرفة التحكم السيادية",
+      heroSub: "واجهة Manifesto مصممة بمنهجية: هوية • معمارية • مسار • أثر — وكل سطر فيها يخدم معنى السيادة المعرفية.",
+      quoteLine: "«نحن لا نبني متصفحاً… نحن نبني كياناً رقمياً يسترد حق الإنسان في سيادته المعرفية.»",
+      kbd1: "نظام خط",
+      kbd2: "Manifesto",
+      kbd3: "Roadmap",
       kpiTitle: "مؤشرات سيادية",
-      kpi1Label: "شفافية",
-      kpi1Val: "92%",
-      kpi2Label: "خصوصية",
-      kpi2Val: "89%",
-      kpi3Label: "ثقة",
-      kpi3Val: "86%",
-      kpiFoot: "يتم تحديث المؤشرات تلقائيًا عند ربط مصادر حقيقية.",
+      kpi1Label: "الشفافية", kpi1Val: "92%",
+      kpi2Label: "الخصوصية", kpi2Val: "89%",
+      kpi3Label: "الثقة",     kpi3Val: "86%",
+      buildLine: "Build: Static • Deploy: GitHub Pages",
+      kpiFoot: "هذه قيم معيارية قابلة للربط لاحقاً ببيانات حقيقية (Logs/Metrics/Policies).",
+
+      manifestoTitle: "المانيفستو — لماذا Comet‑X؟",
+      manifestoBody: "السيادة المعرفية ليست شعاراً؛ هي بنية قرار. إذا كانت المعرفة تُصاغ خارج سياق الإنسان، تُصبح أداة عليه. Comet‑X يعيد ملكية القرار: من أين تأتي المعلومة؟ كيف تُفهم؟ من يراها؟ وكيف تُستخدم؟",
+      p1Title: "حق السياق", p1Body: "أي معلومة بدون سياق تُصبح تضليلاً. نثبت المصدر، النية، والزمن… قبل أن نعرض الناتج.",
+      p2Title: "حق النقل", p2Body: "بياناتك ليست رهينة منصة. التصميم السيادي يفترض قابلية النقل والتدقيق منذ اليوم الأول.",
+      p3Title: "حق الشفافية", p3Body: "الخوارزمية صندوق أسود؟ مرفوض. نعرض أثر القرار ومسار التوليد وتغيّر الحالة.",
+      p4Title: "حق الوكالة", p4Body: "الوكيل لا يقود المستخدم… بل ينفذ نواياه تحت سياساته وحدوده.",
+
+      threatTitle: "نموذج التهديد",
+      threatList: [
+        "الاحتكار: منصات تحدد ما تراه وما لا تراه",
+        "حبس البيانات: قفل التصدير والنقل والمراجعة",
+        "التتبع: ملفات تعريف وإعلانات وقياس بلا إذن واضح",
+        "التحيز: نماذج تُعيد إنتاج تفضيلات خارجية",
+        "انهيار السياق: اقتطاع الكلام من معناه"
+      ],
+      threatFoot: "الرد: بروتوكولات مفتوحة + سجلات شفافة + سياسات هوية + قياس عادل.",
+
       tabIdentity: "الهوية والصراع",
-      tabArchitecture: "معمارية الفصوص (Tri‑Lobe)",
+      tabArchitecture: "معمارية Tri‑Lobe",
       tabRoadmap: "المسار والوجهة",
-      tabImpact: "الجدوى والأثر",
-      card1Title: "جوهر الهوية",
-      card1Body: "تعريف السيادة المعرفية وحوكمة الوصول كحق رقمي أصيل.",
-      card2Title: "التهديدات",
-      card2Body: "الاحتكار، حبس البيانات، التتبع الخوارزمي، وفقدان السياق.",
-      card3Title: "الاستجابة",
-      card3Body: "بروتوكولات مفتوحة + وكلاء + طبقة قياس عادلة.",
+      tabImpact: "الأثر والجدوى",
+
+      card1Title: "جوهر الهوية", card1Body: "تعريف السيادة كحق رقمي: هوية قابلة للتحقق وسياسات رؤية.",
+      card2Title: "التهديدات",   card2Body: "هيمنة المنصات، التتبع، حبس البيانات، وفقدان السياق.",
+      card3Title: "الاستجابة",   card3Body: "وكلاء + بروتوكولات + قياس + حوكمة = قرار سيادي.",
+
       modal: {
-        identity_core: { title: "جوهر الهوية", body: "السيادة المعرفية تعني امتلاك قرار المعرفة: مصدرها، سياقها، من يراها، وكيف تُستخدم. ليست ميزة… بل حق." },
-        identity_threats: { title: "التهديدات", body: "المنصات تُعيد تشكيل وعينا عبر خوارزميات التوصية، وتُغلق البيانات داخل أنظمة لا تسمح بالنقل أو التدقيق." },
-        identity_response: { title: "الاستجابة", body: "تصميم سيادي: هوية قابلة للتحقق، بيانات قابلة للنقل، سجلات شفافة، ووكلاء يحترمون نوايا المستخدم." }
+        identity_core: { title: "جوهر الهوية", body: "الهوية هنا ليست حساباً… بل 'سلطة قرار'. أنت تحدد ما يدخل، ما يخرج، وما يُبنى على بياناتك." },
+        identity_threats:{ title: "التهديدات", body: "عندما تُدار المعرفة عبر وسيط مغلق، يتحول الإنسان إلى منتج. السيادة تعيد الإنسان إلى موضع المُقرر." },
+        identity_response:{ title: "الاستجابة", body: "نصمم طبقات: هوية + بيانات + وكلاء + قياس. كل طبقة تُقفل باباً من أبواب التلاعب." }
       },
-      chart1Title: "مقارنة: المستهدف vs الواقع",
-      chart1Hint: "Radar",
-      chart2Title: "نضج الفصوص",
-      chart2Hint: "Bar",
-      chart3Title: "تقدم الجاهزية",
-      chart3Hint: "Line",
-      chart4Title: "توزيع الأثر",
-      chart4Hint: "Doughnut",
+
+      chart1Title: "المستهدف مقابل الواقع", chart1Hint:"Radar",
+      chart2Title: "نضج الفصوص",            chart2Hint:"Bar",
+      chart3Title: "تقدم الجاهزية",         chart3Hint:"Line",
+      chart4Title: "خريطة الأثر",           chart4Hint:"Doughnut",
+
       archA: "Lobe‑A: الهوية والسياسات",
+      archADesc:"تعريف من أنت… وما الذي يُسمح به، ولمن، ومتى.",
+      archAList:["DID/Keys","سياسات وصول","توقيع/تحقق","سجل موافقات"],
+
       archB: "Lobe‑B: البيانات والقياس",
+      archBDesc:"بيانات سيادية قابلة للتدقيق، ومقاييس تشرح أثر القرار.",
+      archBList:["Data Layer","Schemas","Metrics","Audit Log"],
+
       archC: "Lobe‑C: الوكلاء والبروتوكولات",
-      archAList: ["DID/Keys", "سياسات وصول", "التوقيع والتحقق"],
-      archBList: ["طبقة بيانات سيادية", "مخططات قياس", "سجل تغييرات"],
-      archCList: ["Agents", "Activity Protocol", "Orchestration"],
+      archCDesc:"وكلاء ينفذون نواياك عبر بروتوكولات نشاط مفتوحة.",
+      archCList:["Agents","Activity Protocol","Orchestration","Policy Guards"],
+
       roadTitle: "خارطة الطريق",
-      roadList: ["v1.0 — Manifesto Dashboard", "v1.1 — Agent Layer", "v1.2 — Metrics + Governance"],
-      impactEcoTitle: "الأثر الاقتصادي",
-      impactEcoBody: "خفض تكلفة الوساطة ورفع قيمة البيانات المحلية عبر الحوكمة والشفافية.",
-      impactSocTitle: "الأثر الاجتماعي",
-      impactSocBody: "تمكين الأفراد وتقليل التلاعب وزيادة المساءلة.",
-      footerLine: "كيان سيادي… لا واجهة فقط."
+      roadIntro: "خطوات صغيرة… لكن كل خطوة تقفل ثغرة سيادية وتفتح قدرة جديدة.",
+      timeline: [
+        {v:"v1.0", t:"Manifesto Dashboard", d:"لوحة سيادية (RTL/LTR) + تصور الهوية/المعمارية/الأثر."},
+        {v:"v1.1", t:"Agent Layer", d:"وكلاء معرفيون + سياسات حدود + سجل أوامر."},
+        {v:"v1.2", t:"Metrics & Governance", d:"قياس حي + حوكمة + تدقيق + تقارير أثر."}
+      ],
+
+      impactEcoTitle:"الأثر الاقتصادي",
+      impactEcoBody:"خفض تكلفة الوساطة، وتثبيت القيمة داخل الاقتصاد المحلي عبر حوكمة البيانات والشفافية.",
+      impactSocTitle:"الأثر الاجتماعي",
+      impactSocBody:"تقليل التلاعب، تمكين الأفراد، وزيادة المساءلة عبر وضوح مسار القرار.",
+
+      ecoKpis: [{k:"TCO",v:"-22%"},{k:"Lock‑in",v:"-35%"},{k:"Speed",v:"+18%"}],
+      socKpis: [{k:"Trust",v:"+26%"},{k:"Bias",v:"-14%"},{k:"Clarity",v:"+31%"}],
+
+      faqTitle:"أسئلة سريعة",
+      faq: [
+        {q:"هل هذا مشروع متصفح؟", a:"لا… المبدأ كيان سيادي يُمكن أن يتجسد كمتصفح/تطبيق/وكيل."},
+        {q:"هل يحتاج build؟", a:"لا. هذه نسخة Static للنشر الفوري، ويمكن تطويرها لاحقاً لأي إطار."},
+        {q:"كيف نربط بيانات حقيقية؟", a:"نضيف endpoints/ملفات JSON ثم تُقرأ وتُرسم مباشرة."}
+      ],
+
+      footerLine:"أنت لا تبني واجهة… أنت تبني سيادة."
     },
+
     en: {
-      statusLine: "SYSTEM STATUS: SOVEREIGN ONLINE • Static Pages — no build required",
-      heroTitle: "Sovereign Dashboard",
-      heroSub: "A multilingual interactive cockpit for cognitive sovereignty: Identity • Architecture • Roadmap • Impact.",
-      quoteLine: "“You’re not writing software… you’re writing history.”",
+      statusLine: "SOVEREIGN ONLINE • Multilingual Control Room • Static Pages (no build)",
+      heroTitle: "Sovereign Control Room",
+      heroSub: "A manifesto dashboard built with intent: Identity • Architecture • Roadmap • Impact — every line serves cognitive sovereignty.",
+      quoteLine: "“We’re not building a browser… we’re building a digital entity that restores cognitive sovereignty.”",
+      kbd1:"Typography",
+      kbd2:"Manifesto",
+      kbd3:"Roadmap",
       kpiTitle: "Sovereign KPIs",
-      kpi1Label: "Transparency",
-      kpi1Val: "92%",
-      kpi2Label: "Privacy",
-      kpi2Val: "89%",
-      kpi3Label: "Trust",
-      kpi3Val: "86%",
-      kpiFoot: "KPIs can be wired to real data sources anytime.",
+      kpi1Label: "Transparency", kpi1Val: "92%",
+      kpi2Label: "Privacy",      kpi2Val: "89%",
+      kpi3Label: "Trust",        kpi3Val: "86%",
+      buildLine: "Build: Static • Deploy: GitHub Pages",
+      kpiFoot: "These are baseline indicators—ready to be wired to real logs/metrics/policies.",
+
+      manifestoTitle: "Manifesto — Why Comet‑X?",
+      manifestoBody: "Cognitive sovereignty is not a slogan; it’s decision architecture. When knowledge is shaped outside human context, it becomes a tool against them. Comet‑X restores ownership: where information comes from, how it’s understood, who sees it, and how it’s used.",
+      p1Title: "Right to Context", p1Body: "Information without context becomes manipulation. We preserve source, intent, and time before output.",
+      p2Title: "Right to Portability", p2Body: "Your data is not a platform hostage. Sovereign design assumes export, audit, and migration.",
+      p3Title: "Right to Transparency", p3Body: "No black boxes. We expose decision impact, generation trace, and state evolution.",
+      p4Title: "Right to Agency", p4Body: "Agents don’t lead users— they execute intent under user-defined policy.",
+
+      threatTitle: "Threat Model",
+      threatList: [
+        "Capture: platforms decide what you see",
+        "Lock‑in: export and audit are blocked",
+        "Tracking: profiling and measurement without clear consent",
+        "Bias: models reproduce external preferences",
+        "Context collapse: meaning stripped from its origin"
+      ],
+      threatFoot: "Response: open protocols + transparent logs + identity policy + fair metrics.",
+
       tabIdentity: "Identity & Conflict",
       tabArchitecture: "Tri‑Lobe Architecture",
       tabRoadmap: "Roadmap & Destination",
-      tabImpact: "Feasibility & Impact",
-      card1Title: "Identity Core",
-      card1Body: "Define sovereignty as a native digital right: access governance & agency.",
-      card2Title: "Threats",
-      card2Body: "Platform capture, data lock‑in, algorithmic tracking, context collapse.",
-      card3Title: "Response",
-      card3Body: "Open protocols + agents + fair measurement layer.",
+      tabImpact: "Impact & Feasibility",
+
+      card1Title: "Identity Core",   card1Body: "Sovereignty as a digital right: verifiable identity and visibility policy.",
+      card2Title: "Threats",         card2Body: "Platform dominance, tracking, lock‑in, and context collapse.",
+      card3Title: "Response",        card3Body: "Agents + protocols + metrics + governance = sovereign decisions.",
+
       modal: {
-        identity_core: { title: "Identity Core", body: "Cognitive sovereignty means owning the decision of knowledge: origin, context, visibility, and use. Not a feature— a right." },
-        identity_threats: { title: "Threats", body: "Platforms shape attention with opaque recommenders and lock data inside systems that resist portability and audit." },
-        identity_response: { title: "Response", body: "Sovereign design: verifiable identity, portable data, transparent logs, and agents that respect user intent." }
+        identity_core: { title: "Identity Core", body: "Identity is not an account—it’s decision authority. You define what enters, what leaves, and what can be built on your data." },
+        identity_threats:{ title: "Threats", body: "When knowledge flows through closed intermediaries, humans become products. Sovereignty puts humans back as deciders." },
+        identity_response:{ title: "Response", body: "Layered design: identity + data + agents + metrics. Each layer closes a manipulation vector." }
       },
-      chart1Title: "Target vs Reality",
-      chart1Hint: "Radar",
-      chart2Title: "Lobe Maturity",
-      chart2Hint: "Bar",
-      chart3Title: "Readiness Progress",
-      chart3Hint: "Line",
-      chart4Title: "Impact Mix",
-      chart4Hint: "Doughnut",
+
+      chart1Title: "Target vs Reality", chart1Hint:"Radar",
+      chart2Title: "Lobe Maturity",     chart2Hint:"Bar",
+      chart3Title: "Readiness Progress",chart3Hint:"Line",
+      chart4Title: "Impact Map",        chart4Hint:"Doughnut",
+
       archA: "Lobe‑A: Identity & Policy",
+      archADesc:"Define who you are, what’s allowed, for whom, and when.",
+      archAList:["DID/Keys","Access policy","Signing/verification","Consent log"],
+
       archB: "Lobe‑B: Data & Metrics",
+      archBDesc:"Auditable sovereign data plus metrics that explain decision impact.",
+      archBList:["Data layer","Schemas","Metrics","Audit log"],
+
       archC: "Lobe‑C: Agents & Protocols",
-      archAList: ["DID/Keys", "Access policy", "Signing & verification"],
-      archBList: ["Sovereign data layer", "Metrics schemas", "Change log"],
-      archCList: ["Agents", "Activity Protocol", "Orchestration"],
+      archCDesc:"Agents executing intent via open activity protocols.",
+      archCList:["Agents","Activity Protocol","Orchestration","Policy guards"],
+
       roadTitle: "Roadmap",
-      roadList: ["v1.0 — Manifesto Dashboard", "v1.1 — Agent Layer", "v1.2 — Metrics + Governance"],
-      impactEcoTitle: "Economic Impact",
-      impactEcoBody: "Reduce middle‑layer cost and increase local data value through governance and transparency.",
-      impactSocTitle: "Social Impact",
-      impactSocBody: "Empower individuals, reduce manipulation, increase accountability.",
-      footerLine: "A sovereign entity… not just a UI."
+      roadIntro: "Small steps, each closing a sovereignty gap and opening a new capability.",
+      timeline: [
+        {v:"v1.0", t:"Manifesto Dashboard", d:"RTL/LTR dashboard + identity/architecture/impact framing."},
+        {v:"v1.1", t:"Agent Layer", d:"Cognitive agents + policy boundaries + command log."},
+        {v:"v1.2", t:"Metrics & Governance", d:"Live metrics + governance + audit + impact reports."}
+      ],
+
+      impactEcoTitle:"Economic Impact",
+      impactEcoBody:"Reduce middle‑layer cost and keep value inside local economies through data governance and transparency.",
+      impactSocTitle:"Social Impact",
+      impactSocBody:"Reduce manipulation, empower individuals, and increase accountability via decision traceability.",
+
+      ecoKpis: [{k:"TCO",v:"-22%"},{k:"Lock‑in",v:"-35%"},{k:"Speed",v:"+18%"}],
+      socKpis: [{k:"Trust",v:"+26%"},{k:"Bias",v:"-14%"},{k:"Clarity",v:"+31%"}],
+
+      faqTitle:"Quick FAQ",
+      faq: [
+        {q:"Is this a browser project?", a:"Not only. It’s a sovereign entity that can manifest as a browser/app/agent."},
+        {q:"Do I need a build?", a:"No. This is a static deployable version; evolve it to any framework later."},
+        {q:"How to wire real data?", a:"Add JSON endpoints/files, then render charts from them directly."}
+      ],
+
+      footerLine:"You’re not building a UI… you’re building sovereignty."
     }
   };
 
-  const els = (id) => document.getElementById(id);
-
-  // state
+  const el = (id) => document.getElementById(id);
   let lang = localStorage.getItem("cometx_lang") || "ar";
-  let theme = localStorage.getItem("cometx_theme") || "dark";
   let charts = {};
 
-  function applyTheme() {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    els("btnTheme").textContent = theme === "dark" ? "🌙" : "☀️";
-  }
-
-  function applyLang() {
+  function applyLang(){
     const t = I18N[lang];
-
     document.documentElement.lang = lang;
-    document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+    document.documentElement.dir  = (lang === "ar") ? "rtl" : "ltr";
     document.body.style.fontFamily = (lang === "ar")
       ? "Tajawal, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial"
       : "Inter, Tajawal, system-ui, -apple-system, Segoe UI, Roboto, Arial";
 
-    // top/hero
-    els("statusLine").textContent = t.statusLine;
-    els("heroTitle").textContent = t.heroTitle;
-    els("heroSub").textContent = t.heroSub;
-    els("quoteLine").textContent = t.quoteLine;
-    els("kpiTitle").textContent = t.kpiTitle;
-    els("kpi1Label").textContent = t.kpi1Label; els("kpi1Val").textContent = t.kpi1Val;
-    els("kpi2Label").textContent = t.kpi2Label; els("kpi2Val").textContent = t.kpi2Val;
-    els("kpi3Label").textContent = t.kpi3Label; els("kpi3Val").textContent = t.kpi3Val;
-    els("kpiFoot").textContent = t.kpiFoot;
+    el("statusLine").textContent = t.statusLine;
+    el("heroTitle").textContent  = t.heroTitle;
+    el("heroSub").textContent    = t.heroSub;
+    el("quoteLine").textContent  = t.quoteLine;
 
-    // tabs
-    els("tabIdentity").textContent = t.tabIdentity;
-    els("tabArchitecture").textContent = t.tabArchitecture;
-    els("tabRoadmap").textContent = t.tabRoadmap;
-    els("tabImpact").textContent = t.tabImpact;
+    el("kbd1").textContent = t.kbd1;
+    el("kbd2").textContent = t.kbd2;
+    el("kbd3").textContent = t.kbd3;
 
-    // cards
-    els("card1Title").textContent = t.card1Title; els("card1Body").textContent = t.card1Body;
-    els("card2Title").textContent = t.card2Title; els("card2Body").textContent = t.card2Body;
-    els("card3Title").textContent = t.card3Title; els("card3Body").textContent = t.card3Body;
+    el("kpiTitle").textContent = t.kpiTitle;
+    el("kpi1Label").textContent = t.kpi1Label; el("kpi1Val").textContent = t.kpi1Val;
+    el("kpi2Label").textContent = t.kpi2Label; el("kpi2Val").textContent = t.kpi2Val;
+    el("kpi3Label").textContent = t.kpi3Label; el("kpi3Val").textContent = t.kpi3Val;
+    el("buildLine").textContent = t.buildLine;
+    el("kpiFoot").textContent = t.kpiFoot;
 
-    // charts titles
-    els("chart1Title").textContent = t.chart1Title; els("chart1Hint").textContent = t.chart1Hint;
-    els("chart2Title").textContent = t.chart2Title; els("chart2Hint").textContent = t.chart2Hint;
-    els("chart3Title").textContent = t.chart3Title; els("chart3Hint").textContent = t.chart3Hint;
-    els("chart4Title").textContent = t.chart4Title; els("chart4Hint").textContent = t.chart4Hint;
+    el("manifestoTitle").textContent = t.manifestoTitle;
+    el("manifestoBody").textContent  = t.manifestoBody;
+    el("p1Title").textContent = t.p1Title; el("p1Body").textContent = t.p1Body;
+    el("p2Title").textContent = t.p2Title; el("p2Body").textContent = t.p2Body;
+    el("p3Title").textContent = t.p3Title; el("p3Body").textContent = t.p3Body;
+    el("p4Title").textContent = t.p4Title; el("p4Body").textContent = t.p4Body;
 
-    // architecture lists
-    els("archA").textContent = t.archA;
-    els("archB").textContent = t.archB;
-    els("archC").textContent = t.archC;
+    el("threatTitle").textContent = t.threatTitle;
+    el("threatList").innerHTML = t.threatList.map(x => `<li>${x}</li>`).join("");
+    el("threatFoot").textContent = t.threatFoot;
 
-    els("archAList").innerHTML = t.archAList.map(x => `<li>${x}</li>`).join("");
-    els("archBList").innerHTML = t.archBList.map(x => `<li>${x}</li>`).join("");
-    els("archCList").innerHTML = t.archCList.map(x => `<li>${x}</li>`).join("");
+    el("tabIdentity").textContent = t.tabIdentity;
+    el("tabArchitecture").textContent = t.tabArchitecture;
+    el("tabRoadmap").textContent = t.tabRoadmap;
+    el("tabImpact").textContent = t.tabImpact;
 
-    // roadmap list
-    els("roadTitle").textContent = t.roadTitle;
-    els("roadList").innerHTML = t.roadList.map(x => `<li>${x}</li>`).join("");
+    el("card1Title").textContent = t.card1Title; el("card1Body").textContent = t.card1Body;
+    el("card2Title").textContent = t.card2Title; el("card2Body").textContent = t.card2Body;
+    el("card3Title").textContent = t.card3Title; el("card3Body").textContent = t.card3Body;
 
-    // impact
-    els("impactEcoTitle").textContent = t.impactEcoTitle;
-    els("impactEcoBody").textContent = t.impactEcoBody;
-    els("impactSocTitle").textContent = t.impactSocTitle;
-    els("impactSocBody").textContent = t.impactSocBody;
+    el("chart1Title").textContent = t.chart1Title; el("chart1Hint").textContent = t.chart1Hint;
+    el("chart2Title").textContent = t.chart2Title; el("chart2Hint").textContent = t.chart2Hint;
+    el("chart3Title").textContent = t.chart3Title; el("chart3Hint").textContent = t.chart3Hint;
+    el("chart4Title").textContent = t.chart4Title; el("chart4Hint").textContent = t.chart4Hint;
 
-    // footer
-    els("footerLine").textContent = t.footerLine;
+    el("archA").textContent = t.archA; el("archADesc").textContent = t.archADesc;
+    el("archB").textContent = t.archB; el("archBDesc").textContent = t.archBDesc;
+    el("archC").textContent = t.archC; el("archCDesc").textContent = t.archCDesc;
+    el("archAList").innerHTML = t.archAList.map(x=>`<li>${x}</li>`).join("");
+    el("archBList").innerHTML = t.archBList.map(x=>`<li>${x}</li>`).join("");
+    el("archCList").innerHTML = t.archCList.map(x=>`<li>${x}</li>`).join("");
 
-    // live button
-    els("btnLive").href = SITE.liveUrl;
+    el("roadTitle").textContent = t.roadTitle;
+    el("roadIntro").textContent = t.roadIntro;
+    el("roadTimeline").innerHTML = t.timeline.map(item => `
+      <div class="tl-item glass rounded-2xl mb-3">
+        <span class="dot"></span>
+        <div class="flex items-center gap-2">
+          <span class="chip rounded-full px-3 py-1 text-xs font-mono">${item.v}</span>
+          <span class="font-black text-slate-100">${item.t}</span>
+        </div>
+        <div class="mt-2 t-small">${item.d}</div>
+      </div>
+    `).join("");
+
+    el("impactEcoTitle").textContent = t.impactEcoTitle;
+    el("impactEcoBody").textContent = t.impactEcoBody;
+    el("impactSocTitle").textContent = t.impactSocTitle;
+    el("impactSocBody").textContent = t.impactSocBody;
+
+    el("impactEcoKpis").innerHTML = t.ecoKpis.map(x => `
+      <div class="glass rounded-xl p-3 text-center">
+        <div class="text-[11px] text-slate-300">${x.k}</div>
+        <div class="text-lg font-extrabold text-emerald-300">${x.v}</div>
+      </div>
+    `).join("");
+
+    el("impactSocKpis").innerHTML = t.socKpis.map(x => `
+      <div class="glass rounded-xl p-3 text-center">
+        <div class="text-[11px] text-slate-300">${x.k}</div>
+        <div class="text-lg font-extrabold text-cyan-300">${x.v}</div>
+      </div>
+    `).join("");
+
+    el("faqTitle").textContent = t.faqTitle;
+    el("faq").innerHTML = t.faq.map(x => `
+      <details class="glass rounded-2xl p-4">
+        <summary class="cursor-pointer font-black text-slate-100">${x.q}</summary>
+        <div class="mt-2 t-small">${x.a}</div>
+      </details>
+    `).join("");
+
+    el("footerLine").textContent = t.footerLine;
+
+    // live link
+    el("btnLive").href = SITE.liveUrl;
 
     // rebuild charts with translated labels
     buildCharts();
   }
 
-  function switchTab(tabId) {
+  function switchTab(tabId){
     document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
-    els("view-" + tabId).classList.remove("hidden");
+    el("view-" + tabId).classList.remove("hidden");
     document.querySelectorAll(".tab").forEach(b => {
       const active = b.dataset.tab === tabId;
       b.classList.toggle("tab-active", active);
@@ -475,29 +681,27 @@
     });
   }
 
-  function openModal(key) {
+  function openModal(key){
     const t = I18N[lang];
     const data = t.modal[key];
-    if (!data) return;
-    els("modalTitle").textContent = data.title;
-    els("modalBody").textContent = data.body;
-    const m = els("modal");
-    m.classList.remove("hidden");
-    m.classList.add("flex");
+    if(!data) return;
+    el("modalTitle").textContent = data.title;
+    el("modalBody").textContent  = data.body;
+    const m = el("modal");
+    m.classList.remove("hidden"); m.classList.add("flex");
   }
-  function closeModal() {
-    const m = els("modal");
-    m.classList.add("hidden");
-    m.classList.remove("flex");
+  function closeModal(){
+    const m = el("modal");
+    m.classList.add("hidden"); m.classList.remove("flex");
   }
 
-  function killCharts() {
-    Object.values(charts).forEach(c => { try { c.destroy(); } catch(e){} });
+  function killCharts(){
+    Object.values(charts).forEach(c => { try{ c.destroy(); }catch(e){} });
     charts = {};
   }
 
-  function buildCharts() {
-    if (!window.Chart) return;
+  function buildCharts(){
+    if(!window.Chart) return;
     killCharts();
 
     Chart.defaults.font.family = (lang === "ar")
@@ -505,132 +709,94 @@
       : "Inter, Tajawal, system-ui, -apple-system, Segoe UI, Roboto, Arial";
     Chart.defaults.color = "rgba(226,232,240,.85)";
 
-    // Identity radar labels
-    const labels = (lang === "ar")
-      ? ["سيادة","شفافية","خصوصية","قابلية النقل","قابلية التتبع"]
+    const radarLabels = (lang === "ar")
+      ? ["سيادة","شفافية","خصوصية","قابلية النقل","قابلية التدقيق"]
       : ["Sovereignty","Transparency","Privacy","Portability","Auditability"];
 
     charts.identity = new Chart(document.getElementById("chartIdentity"), {
-      type: "radar",
-      data: {
-        labels,
-        datasets: [
-          {
-            label: (lang === "ar") ? "المستهدف" : "Target",
-            data: [95, 90, 92, 88, 85],
-            borderColor: "#22d3ee",
-            backgroundColor: "rgba(34,211,238,.18)",
-            pointBackgroundColor: "#22d3ee"
-          },
-          {
-            label: (lang === "ar") ? "الواقع" : "Reality",
-            data: [60, 40, 35, 30, 25],
-            borderColor: "#fb7185",
-            backgroundColor: "rgba(251,113,133,.12)",
-            pointBackgroundColor: "#fb7185"
-          }
+      type:"radar",
+      data:{
+        labels: radarLabels,
+        datasets:[
+          { label: (lang==="ar")?"المستهدف":"Target", data:[95,90,92,88,85],
+            borderColor:"#22d3ee", backgroundColor:"rgba(34,211,238,.18)", pointBackgroundColor:"#22d3ee" },
+          { label: (lang==="ar")?"الواقع":"Reality", data:[60,40,35,30,25],
+            borderColor:"#fb7185", backgroundColor:"rgba(251,113,133,.12)", pointBackgroundColor:"#fb7185" }
         ]
       },
-      options: {
-        scales: {
-          r: {
-            grid: { color: "rgba(148,163,184,.18)" },
-            angleLines: { color: "rgba(148,163,184,.18)" },
-            ticks: { showLabelBackdrop: false }
-          }
-        },
-        plugins: { legend: { position: "top", labels: { color: "rgba(226,232,240,.9)" } } }
+      options:{
+        scales:{ r:{ grid:{color:"rgba(148,163,184,.18)"}, angleLines:{color:"rgba(148,163,184,.18)"}, ticks:{showLabelBackdrop:false} } },
+        plugins:{ legend:{ position:"top" } }
       }
     });
 
     charts.arch = new Chart(document.getElementById("chartArchitecture"), {
-      type: "bar",
-      data: {
-        labels: ["Lobe‑A","Lobe‑B","Lobe‑C"],
-        datasets: [{
-          label: (lang === "ar") ? "نضج (%)" : "Maturity (%)",
-          data: [65, 50, 40],
-          backgroundColor: ["#22c55e","#22d3ee","#a78bfa"]
+      type:"bar",
+      data:{
+        labels:["Lobe‑A","Lobe‑B","Lobe‑C"],
+        datasets:[{
+          label: (lang==="ar")?"نضج (%)":"Maturity (%)",
+          data:[72,58,46],
+          backgroundColor:["#34d399","#22d3ee","#a78bfa"]
         }]
       },
-      options: {
-        indexAxis: "y",
-        scales: {
-          x: { grid: { color: "rgba(148,163,184,.12)" }, max: 100 },
-          y: { grid: { display: false } }
-        },
-        plugins: { legend: { display: false } }
+      options:{
+        indexAxis:"y",
+        scales:{ x:{max:100, grid:{color:"rgba(148,163,184,.12)"}}, y:{grid:{display:false}} },
+        plugins:{ legend:{ display:false } }
       }
     });
 
     charts.road = new Chart(document.getElementById("chartRoadmap"), {
-      type: "line",
-      data: {
-        labels: ["v1.0","v1.1","v1.2"],
-        datasets: [{
-          label: (lang === "ar") ? "الجاهزية" : "Readiness",
-          data: [45, 70, 85],
-          borderColor: "#60a5fa",
-          backgroundColor: "rgba(96,165,250,.18)",
-          tension: .35,
-          fill: true
+      type:"line",
+      data:{
+        labels:["v1.0","v1.1","v1.2"],
+        datasets:[{
+          label:(lang==="ar")?"الجاهزية":"Readiness",
+          data:[48,72,88],
+          borderColor:"#60a5fa",
+          backgroundColor:"rgba(96,165,250,.18)",
+          tension:.35,
+          fill:true
         }]
       },
-      options: {
-        scales: {
-          x: { grid: { color: "rgba(148,163,184,.12)" } },
-          y: { grid: { color: "rgba(148,163,184,.12)" }, min: 0, max: 100 }
+      options:{
+        scales:{
+          x:{grid:{color:"rgba(148,163,184,.12)"}},
+          y:{grid:{color:"rgba(148,163,184,.12)"}, min:0, max:100}
         },
-        plugins: { legend: { position: "bottom" } }
+        plugins:{ legend:{ position:"bottom" } }
       }
     });
 
-    const impactLabels = (lang === "ar")
-      ? ["اقتصادي","اجتماعي","تنظيمي","ابتكار"]
-      : ["Economic","Social","Regulatory","Innovation"];
+    const impactLabels = (lang==="ar")
+      ? ["اقتصادي","اجتماعي","تقني","تنظيمي"]
+      : ["Economic","Social","Technical","Regulatory"];
 
     charts.impact = new Chart(document.getElementById("chartImpact"), {
-      type: "doughnut",
-      data: {
+      type:"doughnut",
+      data:{
         labels: impactLabels,
-        datasets: [{
-          data: [35, 25, 20, 20],
-          backgroundColor: ["#34d399","#60a5fa","#f59e0b","#f472b6"],
-          borderColor: "rgba(255,255,255,.08)"
+        datasets:[{
+          data:[33,27,22,18],
+          backgroundColor:["#34d399","#22d3ee","#a78bfa","#fbbf24"],
+          borderColor:"rgba(255,255,255,.08)"
         }]
       },
-      options: {
-        plugins: { legend: { position: "right", labels: { color: "rgba(226,232,240,.9)" } } }
-      }
+      options:{ plugins:{ legend:{ position:"right" } } }
     });
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    // tabs
-    document.querySelectorAll(".tab").forEach(btn => {
-      btn.addEventListener("click", () => switchTab(btn.dataset.tab));
-    });
-
-    // modal
-    els("modalClose").addEventListener("click", closeModal);
-    els("modal").addEventListener("click", (e) => { if (e.target === els("modal")) closeModal(); });
-
-    // theme
-    applyTheme();
-    els("btnTheme").addEventListener("click", () => {
-      theme = (theme === "dark") ? "light" : "dark";
-      localStorage.setItem("cometx_theme", theme);
-      applyTheme();
-    });
-
-    // lang
-    els("btnLang").addEventListener("click", () => {
-      lang = (lang === "ar") ? "en" : "ar";
+    document.querySelectorAll(".tab").forEach(btn => btn.addEventListener("click", () => switchTab(btn.dataset.tab)));
+    el("btnLang").addEventListener("click", () => {
+      lang = (lang==="ar") ? "en" : "ar";
       localStorage.setItem("cometx_lang", lang);
       applyLang();
     });
+    el("modalClose").addEventListener("click", closeModal);
+    el("modal").addEventListener("click", (e)=>{ if(e.target===el("modal")) closeModal(); });
 
-    // initial
     applyLang();
     switchTab("identity");
   });
