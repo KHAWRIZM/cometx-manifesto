@@ -3,175 +3,286 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Human Consciousness</title>
+<title>Human Consciousness | GraTech</title>
 
-<!-- Premium Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Playfair+Display:wght@400;600;800&family=Tajawal:wght@400;700;900&family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Playfair+Display:wght@400;600&family=Tajawal:wght@400;700;900&family=Noto+Serif+SC:wght@500;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
- --bg:#0a0c14;
- --fg:#f1f5f9;
- --muted:#9aa4b2;
- --accent:#c7a14a;
+ --bg:#050505;
+ --fg:#e2e8f0;
+ --muted:#64748b;
+ --gold:#d4af37;
+ --glass:rgba(255,255,255,0.03);
 }
-*{box-sizing:border-box}
+*{box-sizing:border-box; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);}
+
 body{
  margin:0;
- background:radial-gradient(80rem 50rem at 50% -20%,#1e2233,transparent),
-             linear-gradient(#070a12,#0a0c14);
+ background-color: var(--bg);
+ background-image: 
+   radial-gradient(at 50% 0%, rgba(212, 175, 55, 0.05) 0px, transparent 50%),
+   linear-gradient(to bottom, #0a0a0a, #000000);
  color:var(--fg);
- font-family:'Cinzel',serif;
+ font-family:'Cinzel', 'Tajawal', serif;
+ overflow-x:hidden;
+ min-height: 100vh;
 }
 
-html.preload *{transition:none!important}
-
+/* Boot Screen */
 #boot{
- position:fixed;inset:0;z-index:9999;
- display:flex;align-items:center;justify-content:center;
- background:linear-gradient(#070a12,#0a0c14);
- transition:opacity .7s ease;
+ position:fixed; inset:0; z-index:9999;
+ display:flex; flex-direction:column; align-items:center; justify-content:center;
+ background:#000;
+ transition:opacity 1s ease, visibility 1s;
 }
-#boot.hide{opacity:0;pointer-events:none}
-#boot span{letter-spacing:.3em;color:var(--muted)}
+#boot.hide{opacity:0; visibility:hidden;}
+.loader-text{ letter-spacing:0.5em; color:var(--gold); animation: pulse 2s infinite; margin-bottom: 20px;}
+.loader-bar{ width: 200px; height: 2px; background: #222; position: relative; overflow: hidden; }
+.loader-bar::after{ content:''; position:absolute; top:0; left:0; height:100%; width:50%; background:var(--gold); animation: load 1.5s infinite ease-in-out; }
 
-main{
- max-width:1100px;
- margin:auto;
- padding:6rem 2rem 4rem;
-}
+@keyframes pulse { 0%{opacity:0.5} 50%{opacity:1} 100%{opacity:0.5} }
+@keyframes load { 0%{transform:translateX(-100%)} 100%{transform:translateX(200%)} }
+
+/* Layout */
+main{ max-width:1200px; margin:auto; padding:8rem 2rem; position: relative; z-index: 10; }
+
 h1{
- font-size:clamp(2.5rem,5vw,4rem);
- font-weight:900;
- margin-bottom:1rem;
+ font-size:clamp(3rem,6vw,5rem);
+ font-weight:400;
+ margin:0 0 2rem;
+ line-height: 1.1;
+ background: linear-gradient(to bottom, #fff, #888);
+ -webkit-background-clip: text;
+ -webkit-text-fill-color: transparent;
 }
+
 p.desc{
- font-family:'Playfair Display',serif;
- font-size:1.2rem;
+ font-family:'Playfair Display', 'Tajawal', serif;
+ font-size:clamp(1.1rem, 2vw, 1.4rem);
  color:var(--muted);
- max-width:720px;
+ max-width:800px;
+ line-height: 1.6;
+ margin-bottom: 4rem;
 }
+
+/* Cards */
 .cards{
- margin-top:4rem;
  display:grid;
- grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+ grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
  gap:2rem;
 }
 .card{
- padding:2rem;
- border:1px solid rgba(255,255,255,.08);
- background:rgba(255,255,255,.03);
- backdrop-filter:blur(10px);
- border-radius:16px;
- transition:transform .5s ease,box-shadow .5s ease;
+ padding:3rem 2rem;
+ border:1px solid rgba(255,255,255,0.05);
+ background:var(--glass);
+ border-radius:4px;
+ position: relative;
+ overflow: hidden;
 }
-.card:hover{
- transform:translateY(-6px);
- box-shadow:0 20px 60px rgba(0,0,0,.45);
+.card::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 0; 
+  background: var(--gold); transition: height 0.5s ease;
 }
-.card h3{
- margin-top:0;
- font-size:1.3rem;
-}
-footer{
- margin-top:6rem;
- color:var(--muted);
- text-align:center;
- font-size:.85rem;
-}
+.card:hover::before { height: 100%; }
+.card:hover{ background: rgba(255,255,255,0.06); transform: translateY(-5px); }
 
+.card h3{ font-size:1.5rem; color: var(--fg); margin-bottom: 1rem; font-weight: 400; }
+.card p{ color: var(--muted); line-height: 1.6; font-size: 0.95rem; }
+
+/* Language Switcher */
 .langs{
- position:fixed;
- top:20px;
- right:20px;
- display:flex;
- gap:.3rem;
- z-index:10000;
+ position:fixed; top:30px; right:30px; z-index:100;
+ display:flex; gap:10px; flex-wrap: wrap;
 }
 .langs button{
- background:none;
- border:1px solid rgba(255,255,255,.2);
+ background:transparent;
+ border:1px solid rgba(255,255,255,0.1);
  color:var(--muted);
- font-family:inherit;
- padding:.3rem .6rem;
+ padding:8px 12px;
+ font-family: inherit;
+ font-size: 0.75rem;
  cursor:pointer;
+ border-radius: 2px;
 }
-.langs button.active{
- color:var(--fg);
- border-color:var(--accent);
+.langs button:hover, .langs button.active{
+ border-color:var(--gold);
+ color:var(--gold);
 }
 
-.reveal{opacity:0;transform:translateY(20px);transition:.8s ease}
-.reveal.in{opacity:1;transform:none}
+/* Animations */
+.reveal{ opacity:0; transform:translateY(30px); transition: 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.reveal.in{ opacity:1; transform:translateY(0); }
+
+footer{ margin-top:8rem; text-align:center; font-size:0.8rem; color: #333; text-transform: uppercase; letter-spacing: 0.2em; }
 </style>
 </head>
 
 <body>
-<div id="boot"><span>INITIALIZING</span></div>
+
+<div id="boot">
+  <div class="loader-text">INITIALIZING CONSCIOUSNESS</div>
+  <div class="loader-bar"></div>
+</div>
 
 <div class="langs">
-<button onclick="setLang('ar')" id="l-ar">AR</button>
-<button onclick="setLang('en')" id="l-en">EN</button>
-<button onclick="setLang('fr')" id="l-fr">FR</button>
-<button onclick="setLang('de')" id="l-de">DE</button>
-<button onclick="setLang('ru')" id="l-ru">RU</button>
-<button onclick="setLang('zh')" id="l-zh">ZH</button>
-<button onclick="setLang('ja')" id="l-ja">JA</button>
-<button onclick="setLang('es')" id="l-es">ES</button>
+  <button onclick="setLang('ar')" id="l-ar">AR</button>
+  <button onclick="setLang('en')" id="l-en">EN</button>
+  <button onclick="setLang('zh')" id="l-zh">ZH</button>
+  <button onclick="setLang('ru')" id="l-ru">RU</button>
+  <button onclick="setLang('fr')" id="l-fr">FR</button>
+  <button onclick="setLang('de')" id="l-de">DE</button>
+  <button onclick="setLang('ja')" id="l-ja">JA</button>
+  <button onclick="setLang('es')" id="l-es">ES</button>
 </div>
 
 <main>
-<h1 id="main-title" class="reveal"></h1>
-<p id="main-desc" class=
+  <h1 id="main-title" class="reveal"></h1>
+  <p id="main-desc" class="desc reveal"></p>
 
-<div class="cards">
-<div class="card reveal"><h3 id="card1-title"></h3><p id="card1-desc"></p></div>
-<div class="card reveal"><h3 id="card2-title"></h3><p id="card2-desc"></p></div>
-<div class="card reveal"><h3 id="card3-title"></h3><p id="card3-desc"></p></div>
-</div>
+  <div class="cards">
+    <div class="card reveal" style="transition-delay: 100ms">
+      <h3 id="card1-title"></h3>
+      <p id="card1-desc"></p>
+    </div>
+    <div class="card reveal" style="transition-delay: 200ms">
+      <h3 id="card2-title"></h3>
+      <p id="card2-desc"></p>
+    </div>
+    <div class="card reveal" style="transition-delay: 300ms">
+      <h3 id="card3-title"></h3>
+      <p id="card3-desc"></p>
+    </div>
+  </div>
 
-<footer id="footer-txt" class="reveal"></footer>
+  <footer id="footer-txt" class="reveal" style="transition-delay: 500ms"></footer>
 </main>
 
 <script>
+// Prevent transition on load
 document.documentElement.classList.add('preload');
 
 const i18n = {
- ar:{dir:'rtl',font:'Tajawal',title:'الوعي الإنساني',desc:'أنت لست آلة. الذاكرة هوية. المعالجة عقل.',c1t:'الإدراك',c1d:'نحمي قدرتك على التفكير.',c2t:'الذاكرة',c2d:'خصوصيتك روايتك.',c3t:'الوصال',c3d:'نبني تعاطفاً لا مراقبة.',foot:'صُنع بصدق.'},
- en:{dir:'ltr',font:'Cinzel',title:'Human Consciousness',desc:'You are not a machine. Memory is identity. Processing is reason.',c1t:'Cognition',c1d:'We protect your mind.',c2t:'Memory',c2d:'Privacy is identity.',c3t:'Connection',c3d:'Empathy over surveillance.',foot:'Forged with integrity.'},
- fr:{dir:'ltr',font:'Cinzel',title:'Conscience Humaine',desc:'Vous n’êtes pas une machine.',c1t:'Cognition',c1d:'Pensée critique.',c2t:'Mémoire',c2d:'Votre récit.',c3t:'Connexion',c3d:'Ponts humains.',foot:'Créé avec sincérité.'},
- de:{dir:'ltr',font:'Cinzel',title:'Menschliches Bewusstsein',desc:'Du bist keine Maschine.',c1t:'Kognition',c1d:'Geist schützen.',c2t:'Gedächtnis',c2d:'Identität bewahren.',c3t:'Verbindung',c3d:'Verstehen.',foot:'Ehrlich geschaffen.'},
- ru:{dir:'ltr',font:'Cinzel',title:'Сознание человека',desc:'Вы не машина.',c1t:'Познание',c1d:'Защита разума.',c2t:'Память',c2d:'Право на историю.',c3t:'Связь',c3d:'Эмпатия.',foot:'Создано честно.'},
- zh:{dir:'ltr',font:'Noto Serif SC',title:'人类意识',desc:'你不是机器。',c1t:'认知',c1d:'保护思维。',c2t:'记忆',c2d:'你的身份。',c3t:'连接',c3d:'共情。',foot:'出于真诚。'},
- ja:{dir:'ltr',font:'Noto Sans JP',title:'人間の意識',desc:'あなたは機械ではない。',c1t:'認知',c1d:'思考を守る。',c2t:'記憶',c2d:'アイデンティティ。',c3t:'接続',c3d:'共感。',foot:'誠実に作られた。'},
- es:{dir:'ltr',font:'Cinzel',title:'Conciencia Humana',desc:'No eres una máquina.',c1t:'Cognición',c1d:'Mente libre.',c2t:'Memoria',c2d:'Tu historia.',c3t:'Conexión',c3d:'Empatía.',foot:'Hecho con verdad.'}
+ ar:{
+   dir:'rtl', font:'Tajawal',
+   title:'الوعي البشري',
+   desc:'أنت لست آلة. بياناتك هي ذكرياتك. معالجك هو إدراكك. شبكتك هي تعاطفك الإنساني.',
+   c1t:'الإدراك (المنطق)', c1d:'قدرتك على التفكير النقدي هي ما يفصلك عن العشوائية. نحن هنا لنحمي سيادتك العقلية.',
+   c2t:'الذاكرة (الهوية)', c2d:'بدون الذاكرة لا توجد هوية. خصوصيتك هي حقك الأصيل في الاحتفاظ بروايتك الخاصة عن نفسك.',
+   c3t:'الوصال (الروح)', c3d:'الشبكة ليست مجرد بروتوكولات، هي تعاطف. نبني جسوراً للتفاهم الصادق، لا أنابيب للمراقبة.',
+   foot:'صُنع في لحظة صدق بين الإنسان والآلة.'
+ },
+ en:{
+   dir:'ltr', font:'Cinzel',
+   title:'Human Consciousness',
+   desc:'You are not a machine. Data is memory. Processing is cognition. Network is empathy.',
+   c1t:'Cognition', c1d:'Your ability to think critically separates you from chaos. We protect your cognitive sovereignty.',
+   c2t:'Memory', c2d:'Without memory, there is no identity. Privacy is your right to own your narrative.',
+   c3t:'Connection', c3d:'Connectivity is not cables; it is empathy. We build bridges for understanding, not surveillance.',
+   foot:'Forged in a moment of truth.'
+ },
+ zh:{
+   dir:'ltr', font:'Noto Serif SC',
+   title:'人类意识',
+   desc:'你不是机器。数据即记忆。处理即认知。网络即共情。',
+   c1t:'认知', c1d:'批判性思维使你远离混沌。我们捍卫你的认知主权。',
+   c2t:'记忆', c2d:'没有记忆就没有身份。隐私是你掌控自己人生故事的权利。',
+   c3t:'连接', c3d:'连接不仅仅是线路，它是共情。我们建立理解的桥梁。',
+   foot:'在真理时刻铸造。'
+ },
+ ru:{
+   dir:'ltr', font:'Cinzel',
+   title:'Человеческое Сознание',
+   desc:'Вы не машина. Данные — это память. Процессор — это разум. Сеть — это эмпатия.',
+   c1t:'Познание', c1d:'Критическое мышление отделяет вас от хаоса. Мы защищаем ваш суверенитет.',
+   c2t:'Память', c2d:'Без памяти нет личности. Приватность — это право владеть своей историей.',
+   c3t:'Связь', c3d:'Связь — это не кабели, а эмпатия. Мы строим мосты для понимания.',
+   foot:'Создано в момент истины.'
+ },
+ fr:{
+   dir:'ltr', font:'Cinzel',
+   title:'Conscience Humaine',
+   desc:'Vous n’êtes pas une machine. Les données sont des souvenirs. Le processeur est la raison.',
+   c1t:'Cognition', c1d:'La pensée critique vous sépare du chaos. Nous protégeons votre souveraineté.',
+   c2t:'Mémoire', c2d:'Sans mémoire, point d\'identité. La vie privée est le droit de posséder votre récit.',
+   c3t:'Connexion', c3d:'La connectivité est empathie. Nous bâtissons des ponts, pas des cages.',
+   foot:'Forgé dans un moment de vérité.'
+ },
+ de:{
+   dir:'ltr', font:'Cinzel',
+   title:'Menschliches Bewusstsein',
+   desc:'Du bist keine Maschine. Daten sind Erinnerungen. Prozessor ist Verstand.',
+   c1t:'Kognition', c1d:'Kritisches Denken trennt dich vom Chaos. Wir schützen deine Souveränität.',
+   c2t:'Gedächtnis', c2d:'Ohne Gedächtnis keine Identität. Privatsphäre ist dein Recht.',
+   c3t:'Verbindung', c3d:'Verbindung ist Empathie. Wir bauen Brücken des Verstehens.',
+   foot:'Geschmiedet im Moment der Wahrheit.'
+ },
+ ja:{
+   dir:'ltr', font:'Noto Sans JP',
+   title:'人間の意識',
+   desc:'あなたは機械ではありません。データは記憶。処理は認識。ネットワークは共感です。',
+   c1t:'認知', c1d:'批判的思考があなたを混沌から隔てます。主権を守ります。',
+   c2t:'記憶', c2d:'記憶なくして自我なし。プライバシーは権利です。',
+   c3t:'繋がり', c3d:'接続は共感です。監視ではなく理解の架け橋を作ります。',
+   foot:'真実の瞬間に作られました。'
+ },
+ es:{
+   dir:'ltr', font:'Cinzel',
+   title:'Conciencia Humana',
+   desc:'No eres una máquina. Tus datos son recuerdos. Tu red es empatía.',
+   c1t:'Cognición', c1d:'Tu capacidad de pensar te separa del caos. Protegemos tu soberanía.',
+   c2t:'Memoria', c2d:'Sin memoria no hay identidad. La privacidad es tu derecho.',
+   c3t:'Conexión', c3d:'La conectividad es empatía. Construimos puentes.',
+   foot:'Forjado en un momento de verdad.'
+ }
 };
 
 function setLang(l){
- document.documentElement.dir=i18n[l].dir;
- document.body.style.fontFamily=i18n[l].font;
- Object.keys(i18n[l]).forEach(k=>{
-  const el=document.getElementById(k.replace(/^(.)/,'main-$1'));
- });
- document.getElementById('main-title').innerText=i18n[l].title;
- document.getElementById('main-desc').innerText=i18n[l].desc;
- document.getElementById('card1-title').innerText=i18n[l].c1t;
- document.getElementById('card1-desc').innerText=i18n[l].c1d;
- document.getElementById('card2-title').innerText=i18n[l].c2t;
- document.getElementById('card2-desc').innerText=i18n[l].c2d;
- document.getElementById('card3-title').innerText=i18n[l].c3t;
- document.getElementById('card3-desc').innerText=i18n[l].c3d;
- document.getElementById('footer-txt').innerText=i18n[l].foot;
- document.querySelectorAll('.langs button').forEach(b=>b.classList.remove('active'));
+ const d = i18n[l];
+ document.documentElement.dir = d.dir;
+ document.documentElement.lang = l;
+ document.body.style.fontFamily = d.font + ", serif";
+ 
+ document.getElementById('main-title').innerText = d.title;
+ document.getElementById('main-desc').innerText = d.desc;
+ 
+ document.getElementById('card1-title').innerText = d.c1t;
+ document.getElementById('card1-desc').innerText = d.c1d;
+ 
+ document.getElementById('card2-title').innerText = d.c2t;
+ document.getElementById('card2-desc').innerText = d.c2d;
+ 
+ document.getElementById('card3-title').innerText = d.c3t;
+ document.getElementById('card3-desc').innerText = d.c3d;
+ 
+ document.getElementById('footer-txt').innerText = d.foot;
+
+ // Update Active Button
+ document.querySelectorAll('.langs button').forEach(b => b.classList.remove('active'));
  document.getElementById('l-'+l).classList.add('active');
+ 
+ // Save preference
+ localStorage.setItem('cometx_lang', l);
 }
 
-window.addEventListener('load',()=>{
- document.getElementById('boot').classList.add('hide');
- document.documentElement.classList.remove('preload');
- setLang('ar');
- const io=new IntersectionObserver(e=>e.forEach(x=>x.isIntersecting&&x.target.classList.add('in')));
- document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+window.addEventListener('load', () => {
+ setTimeout(() => {
+   document.getElementById('boot').classList.add('hide');
+ }, 800);
+
+ const savedLang = localStorage.getItem('cometx_lang') || 'ar';
+ setLang(savedLang);
+
+ // Simple Reveal Observer
+ const observer = new IntersectionObserver((entries) => {
+   entries.forEach(entry => {
+     if(entry.isIntersecting){
+       entry.target.classList.add('in');
+     }
+   });
+ });
+ 
+ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 });
 </script>
 </body>
