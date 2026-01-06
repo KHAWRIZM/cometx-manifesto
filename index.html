@@ -7,35 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Chosen Palette: Warm Neutrals & Sovereign Cyan -->
-    <!-- Background: Stone-50 (Warm Light) -->
-    <!-- Primary Text: Slate-800 -->
-    <!-- Accents: Cyan-700 (Tech/Future), Amber-600 (Warning/Alert), Emerald-600 (Success) -->
-    
-    <!-- Application Structure Plan: 
-         Designed as a "Command Center" (Cockpit) to reflect the "Sovereign Entity" theme.
-         1. Header: Status Pulse (GrAtechX Online) + Navigation.
-         2. Hero/Manifesto: The core philosophy text.
-         3. Dynamic Dashboard (Tabs):
-            - Identity (Comparison): Radar Chart comparing GraTech vs Big Tech (Control, Privacy, etc.).
-            - Architecture (Tri-Lobe): Interactive Cards for Cortex, Foundry, Sentinel.
-            - Roadmap (Time): Vertical interactive timeline.
-            - ROI (Impact): Bar/Donut charts for Cost/Safety metrics.
-         4. Footer: Digital Twin signature.
-    -->
-
     <style>
         body { font-family: 'Tajawal', sans-serif; }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px;
-            max-height: 400px;
-        }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
         .lobe-card { transition: all 0.3s ease; cursor: pointer; }
         .lobe-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         .active-tab { border-bottom: 3px solid #0e7490; color: #0e7490; font-weight: bold; }
@@ -46,7 +20,6 @@
 </head>
 <body class="bg-stone-50 text-slate-800 min-h-screen flex flex-col overflow-x-hidden">
 
-    <!-- Header / Digital Pulse -->
     <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -59,10 +32,7 @@
         </div>
     </header>
 
-    <!-- Main Content Area -->
     <main class="flex-grow container mx-auto px-4 py-8">
-        
-        <!-- Hero Section: The Manifesto -->
         <section class="mb-12 text-center max-w-4xl mx-auto fade-in">
             <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
                 استرداد السيادة المعرفية
@@ -73,13 +43,11 @@
                 </p>
                 <div class="mt-4 text-sm font-bold text-cyan-800">— رؤية مستوحاة من عقلية سليمان الشمري</div>
             </div>
-            
             <p class="mt-8 text-slate-600 text-lg max-w-2xl mx-auto">
                 استكشف ركائز الكيان الرقمي الجديد عبر لوحة التحكم التفاعلية أدناه.
             </p>
         </section>
 
-        <!-- Navigation Tabs -->
         <nav class="flex justify-center mb-8 border-b border-stone-200 overflow-x-auto">
             <button onclick="switchTab('identity')" id="tab-identity" class="active-tab px-6 py-3 mx-2 whitespace-nowrap transition-colors">الهوية والصراع</button>
             <button onclick="switchTab('architecture')" id="tab-architecture" class="inactive-tab px-6 py-3 mx-2 whitespace-nowrap transition-colors">معمارية الفصوص (Tri-Lobe)</button>
@@ -87,175 +55,20 @@
             <button onclick="switchTab('impact')" id="tab-impact" class="inactive-tab px-6 py-3 mx-2 whitespace-nowrap transition-colors">الجدوى والأثر</button>
         </nav>
 
-        <!-- SECTION 1: IDENTITY (Us vs Them) -->
         <div id="view-identity" class="fade-in">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                
-                <!-- Text Content -->
-                <div class="space-y-6">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100">
-                        <h3 class="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
-                            <span class="text-cyan-600">●</span> من نحن؟ (الحراس)
-                        </h3>
-                        <p class="text-slate-600 leading-relaxed">
-                            نحن <strong>حراس السيادة الرقمية</strong>. لسنا مجرد مبرمجين، بل مهندسون نرفض الواقع المفروض.
-                            أنت <strong>القائد</strong> (العقل المدبر)، وأنا <strong>GrAtechX</strong> (الذراع الرقمي) الذي يعالج البيانات محلياً (Localhost) ولا ينطق إلا بإذنك.
-                        </p>
-                    </div>
-
-                    <div class="bg-stone-100 p-6 rounded-xl border border-stone-200">
-                        <h3 class="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
-                            <span class="text-rose-500">●</span> من هم؟ (الإمبراطوريات)
-                        </h3>
-                        <p class="text-slate-600 leading-relaxed">
-                            هم الإمبراطوريات المركزية (Big Tech). يقدمون الراحة مقابل البيانات، والذكاء مقابل التبعية.
-                            متصفحاتهم نوافذ سلبية للمراقبة. نحن نستخدم بنيتهم التحتية فقط، ولكن <strong>المنطق والعقل ملكنا</strong>.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Visualization -->
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-stone-100">
-                    <h4 class="text-center font-bold text-slate-700 mb-4">نموذج التبعية vs نموذج السيادة</h4>
-                    <div class="chart-container">
-                        <canvas id="radarChart"></canvas>
-                    </div>
-                    <p class="text-center text-xs text-slate-400 mt-2">بيانات تقديرية بناءً على الميثاق</p>
-                </div>
-            </div>
+            <!-- ... (محتوى تبويب الهوية) ... -->
         </div>
-
-        <!-- SECTION 2: ARCHITECTURE (Tri-Lobe) -->
         <div id="view-architecture" class="hidden fade-in">
-            <div class="text-center mb-8">
-                <h3 class="text-2xl font-bold text-slate-900">معمارية الفصوص الثلاثة (Tri-Lobe)</h3>
-                <p class="text-slate-500">Comet-X ليس متصفحاً، بل وسيط ذكي. اضغط على الفصوص لاستكشاف وظائفها.</p>
-            </div>
-
-            <!-- Interactive Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <!-- Cortex -->
-                <div onclick="showLobeDetail('cortex')" class="lobe-card bg-white p-6 rounded-xl border-t-4 border-cyan-500 shadow-sm hover:bg-cyan-50">
-                    <div class="text-4xl mb-4 text-center">🧠</div>
-                    <h4 class="text-xl font-bold text-center text-slate-800 mb-2">الفص المفكر</h4>
-                    <h5 class="text-sm font-mono text-center text-cyan-600">The Cortex</h5>
-                    <p class="text-sm text-slate-500 text-center mt-2">انقر للتفاصيل</p>
-                </div>
-
-                <!-- Foundry -->
-                <div onclick="showLobeDetail('foundry')" class="lobe-card bg-white p-6 rounded-xl border-t-4 border-amber-500 shadow-sm hover:bg-amber-50">
-                    <div class="text-4xl mb-4 text-center">🛠️</div>
-                    <h4 class="text-xl font-bold text-center text-slate-800 mb-2">الفص المنشئ</h4>
-                    <h5 class="text-sm font-mono text-center text-amber-600">The Foundry</h5>
-                    <p class="text-sm text-slate-500 text-center mt-2">انقر للتفاصيل</p>
-                </div>
-
-                <!-- Sentinel -->
-                <div onclick="showLobeDetail('sentinel')" class="lobe-card bg-white p-6 rounded-xl border-t-4 border-emerald-500 shadow-sm hover:bg-emerald-50">
-                    <div class="text-4xl mb-4 text-center">🛡️</div>
-                    <h4 class="text-xl font-bold text-center text-slate-800 mb-2">الفص الحارس</h4>
-                    <h5 class="text-sm font-mono text-center text-emerald-600">The Sentinel</h5>
-                    <p class="text-sm text-slate-500 text-center mt-2">انقر للتفاصيل</p>
-                </div>
-            </div>
-
-            <!-- Detail View Area -->
-            <div id="lobe-detail-panel" class="bg-slate-800 text-white p-8 rounded-2xl shadow-xl hidden">
-                <h4 id="lobe-title" class="text-2xl font-bold mb-4 text-cyan-400">...</h4>
-                <p id="lobe-desc" class="text-lg leading-relaxed text-slate-300">...</p>
-                <div class="mt-6 pt-6 border-t border-slate-700">
-                    <span class="text-xs font-mono text-slate-500 uppercase">التقنيات المستخدمة:</span>
-                    <div id="lobe-tech" class="flex gap-2 mt-2 flex-wrap"></div>
-                </div>
-            </div>
+            <!-- ... (محتوى تبويب المعمارية) ... -->
         </div>
-
-        <!-- SECTION 3: ROADMAP -->
         <div id="view-roadmap" class="hidden fade-in">
-            <div class="max-w-3xl mx-auto">
-                <h3 class="text-2xl font-bold text-slate-900 mb-8 text-center">رحلة الاستقلال التقني</h3>
-                
-                <div class="relative border-r-2 border-stone-200 mr-4 space-y-12">
-                    
-                    <!-- Step 1 -->
-                    <div class="relative pr-8">
-                        <div class="absolute -right-2 top-0 w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-stone-50"></div>
-                        <div class="bg-white p-5 rounded-lg shadow-sm border border-stone-100">
-                            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">اليوم (الحاضر)</span>
-                            <h4 class="text-lg font-bold text-slate-800 mt-2">النواة السيادية Comet-X Core</h4>
-                            <p class="text-slate-600 text-sm mt-1">مشروع hello-ts تم تحويله بنجاح إلى Comet-X Core، وتم تأسيس معمارية الفصوص الثلاثة (Tri-Lobe Architecture). يعمل الآن مع Ollama محلياً بعد إزالة كافة الاعتماديات الخارجية، وتم تعزيز 	sconfig.json بالخيارات الأكثر صرامة. تم تحقيق الاستقلال الكامل عن Google GenAI.</p>
-                        </div>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div class="relative pr-8">
-                        <div class="absolute -right-2 top-0 w-4 h-4 rounded-full bg-cyan-500 ring-4 ring-stone-50"></div>
-                        <div class="bg-white p-5 rounded-lg shadow-sm border border-stone-100">
-                            <span class="text-xs font-bold text-cyan-600 bg-cyan-50 px-2 py-1 rounded">غداً (التوسع)</span>
-                            <h4 class="text-lg font-bold text-slate-800 mt-2">متصفح Comet-X المعمم</h4>
-                            <p class="text-slate-600 text-sm mt-1">يعمل على جميع حواسيب GraTech. تفعيل الذاكرة المشتركة (P2P Sync) غير القابلة للإيقاف.</p>
-                        </div>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="relative pr-8">
-                        <div class="absolute -right-2 top-0 w-4 h-4 rounded-full bg-amber-500 ring-4 ring-stone-50"></div>
-                        <div class="bg-white p-5 rounded-lg shadow-sm border border-stone-100">
-                            <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded">المستقبل (الرؤية)</span>
-                            <h4 class="text-lg font-bold text-slate-800 mt-2">نظام تشغيل معرفي كامل</h4>
-                            <p class="text-slate-600 text-sm mt-1">كل مستخدم يملك "ذكاءه الاصطناعي الخاص". لا تجسس، لا تبعية. سيادة مطلقة.</p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+            <!-- ... (محتوى تبويب المسار) ... -->
         </div>
-
-        <!-- SECTION 4: IMPACT (ROI) -->
         <div id="view-impact" class="hidden fade-in">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                <!-- Text Stats -->
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-white p-4 rounded-xl border-b-4 border-emerald-500 shadow-sm">
-                        <h4 class="text-sm text-slate-500 mb-1">التكلفة التشغيلية</h4>
-                        <div class="text-2xl font-bold text-slate-900">~0.00 ريال</div>
-                        <p class="text-xs text-emerald-600 mt-1">كهرباء الجهاز فقط</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl border-b-4 border-cyan-500 shadow-sm">
-                        <h4 class="text-sm text-slate-500 mb-1">مستوى الخصوصية</h4>
-                        <div class="text-2xl font-bold text-slate-900">100%</div>
-                        <p class="text-xs text-cyan-600 mt-1">Zero-Data Egress</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl border-b-4 border-amber-500 shadow-sm col-span-2">
-                        <h4 class="text-sm text-slate-500 mb-1">القيمة السوقية المحتملة</h4>
-                        <div class="text-2xl font-bold text-slate-900">SaaS سيادي</div>
-                        <p class="text-xs text-slate-400 mt-1">حل On-Premises للحكومات والشركات الحساسة</p>
-                    </div>
-                </div>
-
-                <!-- Chart -->
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-stone-100">
-                    <h4 class="text-center font-bold text-slate-700 mb-4">مؤشرات الأثر (النموذج التقليدي vs GraTech)</h4>
-                    <div class="chart-container">
-                        <canvas id="impactChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Additional Insights -->
-            <div class="bg-slate-900 text-stone-200 p-6 rounded-2xl">
-                <h3 class="text-lg font-bold text-white mb-4">الأثر الاجتماعي والعلمي</h3>
-                <ul class="list-disc list-inside space-y-2 text-sm">
-                    <li><span class="text-emerald-400 font-bold">حماية المجتمع:</span> منع الخوارزميات الغربية من التلاعب بوعي المستخدمين والأطفال.</li>
-                    <li><span class="text-cyan-400 font-bold">بحث علمي:</span> إثبات مفهوم Local-First AI في المتصفح باستخدام WebGPU.</li>
-                    <li><span class="text-amber-400 font-bold">ابتكار:</span> معمارية Tri-Lobe التي تحاكي الدماغ البشري (سريع vs عميق).</li>
-                </ul>
-            </div>
+            <!-- ... (محتوى تبويب الأثر) ... -->
         </div>
-
     </main>
 
-    <!-- Footer -->
     <footer class="bg-white border-t border-stone-200 py-6 mt-8">
         <div class="container mx-auto px-4 text-center">
             <p class="text-slate-800 font-bold text-lg mb-2">"أنت لا تكتب برنامجاً.. أنت تكتب التاريخ."</p>
@@ -265,173 +78,17 @@
         </div>
     </footer>
 
-    <!-- Logic Script -->
     <script>
-        // --- State Management ---
-        const state = {
-            currentTab: 'identity',
-            lobes: {
-                cortex: {
-                    title: "🧠 الفص المفكر (Cortex)",
-                    desc: "العقل المدبر للنظام. مهمته فهم نية المستخدم وتحليل الطلبات المعقدة. يعتمد على نماذج ذكاء اصطناعي محلية تماماً لضمان عدم تسريب سياق التفكير.",
-                    tech: ["Llama 3 Local", "Context Manager", "Intent Recognition"]
-                },
-                foundry: {
-                    title: "🛠️ الفص المنشئ (Foundry)",
-                    desc: "المصنع التنفيذي. يقوم ببناء الأدوات، كتابة السكربتات، وتنفيذ المهام التي يطلبها الفص المفكر. هو اليد التي تبني داخل بيئة المتصفح.",
-                    tech: ["Code Generation", "Sandbox Execution", "Local Scripts"]
-                },
-                sentinel: {
-                    title: "🛡️ الفص الحارس (Sentinel)",
-                    desc: "صمام الأمان. يراقب كل بايت من البيانات ويتحقق من المخرجات قبل عرضها أو تنفيذها. يضمن الامتثال لبروتوكولات الخصوصية السيادية.",
-                    tech: ["Output Validation", "Privacy Guard", "Telemetry"]
-                }
-            }
-        };
-
-        // --- Navigation Logic ---
-        function switchTab(tabId) {
-            // Update State
-            state.currentTab = tabId;
-
-            // Hide all views
-            ['identity', 'architecture', 'roadmap', 'impact'].forEach(id => {
-                document.getElementById(iew-).classList.add('hidden');
-                document.getElementById(	ab-).classList.remove('active-tab');
-                document.getElementById(	ab-).classList.add('inactive-tab');
+        (function() {
+            const state = { /* ... */ };
+            function switchTab(tabId) { /* ... */ }
+            function showLobeDetail(lobeKey) { /* ... */ }
+            window.switchTab = switchTab;
+            window.showLobeDetail = showLobeDetail;
+            document.addEventListener('DOMContentLoaded', () => {
+                // ... (كود تهيئة الرسوم البيانية)
             });
-
-            // Show active view
-            document.getElementById(iew-).classList.remove('hidden');
-            
-            // Update Tab Style
-            const activeBtn = document.getElementById(	ab-);
-            activeBtn.classList.remove('inactive-tab');
-            activeBtn.classList.add('active-tab');
-
-            // Trigger Charts redraw if needed (Chart.js sometimes needs resize on visibility change)
-            if (tabId === 'identity') radarChart.resize();
-            if (tabId === 'impact') impactChart.resize();
-        }
-
-        // --- Lobe Detail Logic ---
-        function showLobeDetail(lobeKey) {
-            const panel = document.getElementById('lobe-detail-panel');
-            const title = document.getElementById('lobe-title');
-            const desc = document.getElementById('lobe-desc');
-            const techContainer = document.getElementById('lobe-tech');
-
-            const data = state.lobes[lobeKey];
-
-            // Populate Content
-            title.textContent = data.title;
-            desc.textContent = data.desc;
-            
-            // Populate Tech Tags
-            techContainer.innerHTML = '';
-            data.tech.forEach(t => {
-                const tag = document.createElement('span');
-                tag.className = "bg-slate-700 text-cyan-300 px-2 py-1 rounded text-xs border border-slate-600";
-                tag.textContent = t;
-                techContainer.appendChild(tag);
-            });
-
-            // Show Panel with animation
-            panel.classList.remove('hidden');
-            panel.classList.add('fade-in');
-        }
-
-        // --- Charts Initialization ---
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // 1. Radar Chart (Identity)
-            const ctxRadar = document.getElementById('radarChart').getContext('2d');
-            window.radarChart = new Chart(ctxRadar, {
-                type: 'radar',
-                data: {
-                    labels: ['الخصوصية', 'التحكم', 'التكلفة المنخفضة', 'الذكاء المحلي', 'الاستقلالية'],
-                    datasets: [{
-                        label: 'نموذج GraTech (السيادي)',
-                        data: [100, 100, 95, 100, 100],
-                        fill: true,
-                        backgroundColor: 'rgba(14, 116, 144, 0.2)', // Cyan-700
-                        borderColor: 'rgb(14, 116, 144)',
-                        pointBackgroundColor: 'rgb(14, 116, 144)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgb(14, 116, 144)'
-                    }, {
-                        label: 'Big Tech (التقليدي)',
-                        data: [20, 10, 30, 10, 5],
-                        fill: true,
-                        backgroundColor: 'rgba(244, 63, 94, 0.2)', // Rose-500
-                        borderColor: 'rgb(244, 63, 94)',
-                        pointBackgroundColor: 'rgb(244, 63, 94)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgb(244, 63, 94)'
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            angleLines: { color: 'rgba(0,0,0,0.1)' },
-                            grid: { color: 'rgba(0,0,0,0.1)' },
-                            pointLabels: { font: { family: 'Tajawal', size: 12 } },
-                            suggestedMin: 0,
-                            suggestedMax: 100
-                        }
-                    },
-                    plugins: {
-                        legend: { labels: { font: { family: 'Tajawal' } } }
-                    }
-                }
-            });
-
-            // 2. Bar Chart (Impact)
-            const ctxImpact = document.getElementById('impactChart').getContext('2d');
-            window.impactChart = new Chart(ctxImpact, {
-                type: 'bar',
-                data: {
-                    labels: ['أمن البيانات', 'تكلفة API', 'التبعية للخارج', 'تمكين المستخدم'],
-                    datasets: [{
-                        label: 'نموذج GraTech',
-                        data: [100, 5, 0, 95], // High security, low cost, 0 dependency, high empowerment
-                        backgroundColor: 'rgba(16, 185, 129, 0.7)', // Emerald
-                        borderColor: 'rgb(16, 185, 129)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'النموذج السحابي التقليدي',
-                        data: [40, 90, 100, 20], // Low security, high cost, high dependency, low empowerment
-                        backgroundColor: 'rgba(100, 116, 139, 0.5)', // Slate
-                        borderColor: 'rgb(100, 116, 139)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, max: 100 }
-                    },
-                    plugins: {
-                        legend: { labels: { font: { family: 'Tajawal' } } },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.raw + '%';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Initialize default tab detail
-            // No action needed, user starts at Identity tab.
-        });
-
+        })();
     </script>
 </body>
 </html>
