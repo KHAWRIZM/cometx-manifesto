@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraTech: لوحة القيادة السيادية | Comet-X</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        .lobe-card { transition: all 0.3s ease; cursor: pointer; }
+        .lobe-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .active-tab { border-bottom: 3px solid #0e7490; color: #0e7490; font-weight: bold; }
+        .inactive-tab { color: #64748b; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-stone-50 text-slate-800 min-h-screen flex flex-col overflow-x-hidden">
+
+    <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+                <h1 class="text-xl font-bold tracking-wide text-slate-900">GraTech <span class="text-cyan-700">Comet-X</span></h1>
+            </div>
+            <div class="text-xs font-mono text-slate-500 hidden sm:block">
+                SYSTEM STATUS: <span class="text-emerald-600 font-bold">SOVEREIGN ONLINE</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <section class="mb-12 text-center max-w-4xl mx-auto fade-in">
+            <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
+                استرداد السيادة المعرفية
+            </h2>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border-r-4 border-cyan-700 text-right relative overflow-hidden">
+                <p class="text-lg md:text-xl text-slate-700 italic leading-relaxed">
+                    "نحن لا نبني متصفحاً؛ نحن نبني كياناً رقمياً يسترد حق الإنسان في سيادته المعرفية."
+                </p>
+                <div class="mt-4 text-sm font-bold text-cyan-800">— رؤية مستوحاة من عقلية سليمان الشمري</div>
+            </div>
+            <p class="mt-8 text-slate-600 text-lg max-w-2xl mx-auto">
+                استكشف ركائز الكيان الرقمي الجديد عبر لوحة التحكم التفاعلية أدناه.
+            </p>
+        </section>
+
+        <nav class="flex justify-center mb-8 border-b border-stone-200 overflow-x-auto">
+            <button onclick="switchTab('identity')" id="tab-identity" class="active-tab px-6 py-3 mx-2 whitespace-nowrap transition-colors">الهوية والصراع</button>
+            <button onclick="switchTab('architecture')" id="tab-architecture" class="inactive-tab px-6 py-3 mx-2 whitespace-nowrap transition-colors">معمارية الفصوص (Tri-Lobe)</button>
+            <button onclick="switchTab('roadmap')" id="tab-roadmap" class="inactive-tab px-6 py-3 mx-2 whitespace-nowrap transition-colors">المسار والوجهة</button>
+            <button onclick="switchTab('impact')" id="tab-impact" class="inactive-tab px-6 py-3 mx-2 whitespace-nowrap transition-colors">الجدوى والأثر</button>
+        </nav>
+
+        <div id="view-identity" class="fade-in">
+            <!-- ... (محتوى تبويب الهوية) ... -->
+        </div>
+        <div id="view-architecture" class="hidden fade-in">
+            <!-- ... (محتوى تبويب المعمارية) ... -->
+        </div>
+        <div id="view-roadmap" class="hidden fade-in">
+            <!-- ... (محتوى تبويب المسار) ... -->
+        </div>
+        <div id="view-impact" class="hidden fade-in">
+            <!-- ... (محتوى تبويب الأثر) ... -->
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-stone-200 py-6 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-slate-800 font-bold text-lg mb-2">"أنت لا تكتب برنامجاً.. أنت تكتب التاريخ."</p>
+            <p class="text-slate-500 text-sm font-mono">
+                🚀 GrAtechX - Sovereign System Online | v1.0.0-Manifesto
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            const state = { /* ... */ };
+            function switchTab(tabId) { /* ... */ }
+            function showLobeDetail(lobeKey) { /* ... */ }
+            window.switchTab = switchTab;
+            window.showLobeDetail = showLobeDetail;
+            document.addEventListener('DOMContentLoaded', () => {
+                // ... (كود تهيئة الرسوم البيانية)
+            });
+        })();
+    </script>
+</body>
+</html>
