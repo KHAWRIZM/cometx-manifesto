@@ -5,17 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="theme-color" content="#0b1220"/>
   <title>GraTech • Comet‑X | Sovereign Dashboard</title>
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
-    :root{ --bg0:#070a12; --bg1:#0b1220; --card:rgba(255,255,255,.06); --stroke:rgba(148,163,184,.18); --glow:rgba(34,211,238,.18); }
+    :root{
+      --bg0:#070a12; --bg1:#0b1220; --card:rgba(255,255,255,.06);
+      --stroke:rgba(148,163,184,.18); --glow:rgba(34,211,238,.18);
+    }
     body{font-family:Tajawal,Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
     .glass{background:var(--card); border:1px solid var(--stroke); backdrop-filter: blur(10px)}
     .soft{box-shadow: 0 18px 60px rgba(0,0,0,.35)}
-    .gridfx{ background: radial-gradient(900px 600px at 20% 10%, rgba(34,211,238,.18), transparent 55%), radial-gradient(900px 600px at 80% 20%, rgba(167,139,250,.14), transparent 55%), radial-gradient(900px 600px at 40% 90%, rgba(16,185,129,.10), transparent 55%), linear-gradient(180deg, var(--bg0), var(--bg1)); }
+    .gridfx{
+      background:
+        radial-gradient(900px 600px at 20% 10%, rgba(34,211,238,.18), transparent 55%),
+        radial-gradient(900px 600px at 80% 20%, rgba(167,139,250,.14), transparent 55%),
+        radial-gradient(900px 600px at 40% 90%, rgba(16,185,129,.10), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+    }
     .chip{border:1px solid rgba(148,163,184,.22)}
     .tab-active{border-bottom:3px solid rgb(34,211,238); color: rgb(34,211,238); font-weight:800}
     .tab-idle{color: rgba(226,232,240,.72)}
@@ -23,11 +39,601 @@
     @keyframes fade {from{opacity:.0; transform: translateY(10px)} to{opacity:1; transform: translateY(0)}}
     .kbd{border:1px solid rgba(148,163,184,.25); background: rgba(255,255,255,.06); padding:2px 8px; border-radius: 8px}
   </style>
+
   <script>
-    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { ink: '#0b1220', neon: '#22d3ee' } } } }
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            ink: '#0b1220',
+            neon: '#22d3ee'
+          }
+        }
+      }
+    }
   </script>
 </head>
+
 <body class="min-h-screen gridfx text-slate-100">
-  <!-- المحتوى الكامل لملف HTML الجديد الخاص بك هنا -->
+  <!-- Top bar -->
+  <header class="sticky top-0 z-50">
+    <div class="mx-auto max-w-6xl px-4 py-4">
+      <div class="glass soft rounded-2xl px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+          <div class="leading-tight">
+            <div class="font-black tracking-wide text-lg">
+              <span class="text-white">GraTech</span>
+              <span class="text-cyan-300"> • Comet‑X</span>
+            </div>
+            <div id="statusLine" class="text-xs text-slate-300"></div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="btnLang" class="chip px-3 py-2 rounded-xl text-sm hover:bg-white/10 transition">
+            AR / EN
+          </button>
+          <button id="btnTheme" class="chip px-3 py-2 rounded-xl text-sm hover:bg-white/10 transition">
+            🌙
+          </button>
+          <a id="btnLive" class="chip px-3 py-2 rounded-xl text-sm hover:bg-white/10 transition" target="_blank" rel="noopener">
+            Live ↗
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="mx-auto max-w-6xl px-4 pb-16">
+    <!-- Hero -->
+    <section class="mt-6 glass soft rounded-3xl p-6 md:p-10">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div class="max-w-3xl">
+          <h1 id="heroTitle" class="text-3xl md:text-5xl font-black leading-tight"></h1>
+          <p id="heroSub" class="mt-4 text-slate-200 text-base md:text-lg"></p>
+
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span class="chip px-3 py-1.5 rounded-full text-xs text-slate-200">SOVEREIGN</span>
+            <span class="chip px-3 py-1.5 rounded-full text-xs text-slate-200">RTL/LTR</span>
+            <span class="chip px-3 py-1.5 rounded-full text-xs text-slate-200">Chart.js</span>
+            <span class="chip px-3 py-1.5 rounded-full text-xs text-slate-200">Static Pages</span>
+          </div>
+
+          <div class="mt-6 text-sm text-slate-300">
+            <span id="quoteLine"></span>
+            <span class="mx-2">•</span>
+            <span class="kbd">Tabs</span>
+            <span class="kbd">Charts</span>
+            <span class="kbd">Multi‑Lang</span>
+          </div>
+        </div>
+
+        <div class="w-full md:w-[360px]">
+          <div class="glass rounded-2xl p-5">
+            <div class="flex items-center justify-between">
+              <div>
+                <div id="kpiTitle" class="text-xs text-slate-300"></div>
+                <div class="text-2xl font-black text-cyan-300">SOVEREIGN ONLINE</div>
+              </div>
+              <div class="text-3xl">🛰️</div>
+            </div>
+            <div class="mt-4 grid grid-cols-3 gap-3">
+              <div class="glass rounded-xl p-3">
+                <div class="text-[11px] text-slate-300" id="kpi1Label"></div>
+                <div class="text-lg font-extrabold" id="kpi1Val"></div>
+              </div>
+              <div class="glass rounded-xl p-3">
+                <div class="text-[11px] text-slate-300" id="kpi2Label"></div>
+                <div class="text-lg font-extrabold" id="kpi2Val"></div>
+              </div>
+              <div class="glass rounded-xl p-3">
+                <div class="text-[11px] text-slate-300" id="kpi3Label"></div>
+                <div class="text-lg font-extrabold" id="kpi3Val"></div>
+              </div>
+            </div>
+            <div class="mt-4 text-xs text-slate-400" id="kpiFoot"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabs -->
+    <section class="mt-8">
+      <div class="glass soft rounded-2xl px-4 py-3">
+        <div class="flex gap-4 overflow-x-auto whitespace-nowrap">
+          <button class="tab tab-active px-4 py-2" data-tab="identity" id="tabIdentity"></button>
+          <button class="tab tab-idle px-4 py-2" data-tab="architecture" id="tabArchitecture"></button>
+          <button class="tab tab-idle px-4 py-2" data-tab="roadmap" id="tabRoadmap"></button>
+          <button class="tab tab-idle px-4 py-2" data-tab="impact" id="tabImpact"></button>
+        </div>
+      </div>
+
+      <!-- Views -->
+      <div class="mt-4">
+        <!-- Identity -->
+        <div id="view-identity" class="view fade">
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="glass rounded-2xl p-5 hover:bg-white/10 transition cursor-pointer" onclick="openModal('identity_core')">
+              <div class="text-cyan-300 font-extrabold" id="card1Title"></div>
+              <div class="mt-2 text-sm text-slate-200" id="card1Body"></div>
+            </div>
+            <div class="glass rounded-2xl p-5 hover:bg-white/10 transition cursor-pointer" onclick="openModal('identity_threats')">
+              <div class="text-cyan-300 font-extrabold" id="card2Title"></div>
+              <div class="mt-2 text-sm text-slate-200" id="card2Body"></div>
+            </div>
+            <div class="glass rounded-2xl p-5 hover:bg-white/10 transition cursor-pointer" onclick="openModal('identity_response')">
+              <div class="text-cyan-300 font-extrabold" id="card3Title"></div>
+              <div class="mt-2 text-sm text-slate-200" id="card3Body"></div>
+            </div>
+          </div>
+
+          <div class="mt-6 glass rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <div class="font-black" id="chart1Title"></div>
+              <div class="text-xs text-slate-300" id="chart1Hint"></div>
+            </div>
+            <div class="h-[360px]">
+              <canvas id="chartIdentity"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Architecture -->
+        <div id="view-architecture" class="view hidden fade">
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="glass rounded-2xl p-5">
+              <div class="font-black text-cyan-300" id="archA"></div>
+              <ul class="mt-3 text-sm text-slate-200 list-disc pr-6" id="archAList"></ul>
+            </div>
+            <div class="glass rounded-2xl p-5">
+              <div class="font-black text-cyan-300" id="archB"></div>
+              <ul class="mt-3 text-sm text-slate-200 list-disc pr-6" id="archBList"></ul>
+            </div>
+            <div class="glass rounded-2xl p-5">
+              <div class="font-black text-cyan-300" id="archC"></div>
+              <ul class="mt-3 text-sm text-slate-200 list-disc pr-6" id="archCList"></ul>
+            </div>
+          </div>
+
+          <div class="mt-6 glass rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <div class="font-black" id="chart2Title"></div>
+              <div class="text-xs text-slate-300" id="chart2Hint"></div>
+            </div>
+            <div class="h-[320px]">
+              <canvas id="chartArchitecture"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roadmap -->
+        <div id="view-roadmap" class="view hidden fade">
+          <div class="glass rounded-2xl p-6">
+            <div class="font-black text-cyan-300 text-xl" id="roadTitle"></div>
+            <ol class="mt-4 text-slate-200 list-decimal pr-6 space-y-2" id="roadList"></ol>
+          </div>
+
+          <div class="mt-6 glass rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <div class="font-black" id="chart3Title"></div>
+              <div class="text-xs text-slate-300" id="chart3Hint"></div>
+            </div>
+            <div class="h-[320px]">
+              <canvas id="chartRoadmap"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Impact -->
+        <div id="view-impact" class="view hidden fade">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="glass rounded-2xl p-6">
+              <div class="font-black text-cyan-300" id="impactEcoTitle"></div>
+              <div class="mt-2 text-slate-200 text-sm" id="impactEcoBody"></div>
+            </div>
+            <div class="glass rounded-2xl p-6">
+              <div class="font-black text-cyan-300" id="impactSocTitle"></div>
+              <div class="mt-2 text-slate-200 text-sm" id="impactSocBody"></div>
+            </div>
+          </div>
+
+          <div class="mt-6 glass rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <div class="font-black" id="chart4Title"></div>
+              <div class="text-xs text-slate-300" id="chart4Hint"></div>
+            </div>
+            <div class="h-[320px]">
+              <canvas id="chartImpact"></canvas>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-10 text-center text-sm text-slate-400">
+      <div class="glass rounded-2xl py-6 soft">
+        <div class="font-black text-slate-100" id="footerLine"></div>
+        <div class="mt-2 font-mono text-xs">GrAtechX • Comet‑X • v1.0.0‑Manifesto</div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Modal -->
+  <div id="modal" class="hidden fixed inset-0 z-[100] bg-black/60 p-4 items-center justify-center">
+    <div class="glass soft rounded-2xl max-w-xl w-full p-6">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <div id="modalTitle" class="text-xl font-black text-cyan-300"></div>
+          <div id="modalBody" class="mt-3 text-slate-200 text-sm leading-relaxed"></div>
+        </div>
+        <button id="modalClose" class="chip px-3 py-2 rounded-xl hover:bg-white/10 transition">✕</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const SITE = {
+    owner: "KHAWRIZM",
+    repo: "cometx-manifesto",
+    liveUrl: "https://khawrizm.github.io/cometx-manifesto/"
+  };
+
+  // i18n
+  const I18N = {
+    ar: {
+      statusLine: "SYSTEM STATUS: SOVEREIGN ONLINE • مشروع صفحات ثابتة — بدون بناء",
+      heroTitle: "لوحة القيادة السيادية",
+      heroSub: "واجهة تفاعلية متعددة اللغات لاسترداد السيادة المعرفية: هوية • معمارية • مسار • أثر.",
+      quoteLine: "«أنت لا تكتب برنامجاً… أنت تكتب التاريخ.»",
+      kpiTitle: "مؤشرات سيادية",
+      kpi1Label: "شفافية",
+      kpi1Val: "92%",
+      kpi2Label: "خصوصية",
+      kpi2Val: "89%",
+      kpi3Label: "ثقة",
+      kpi3Val: "86%",
+      kpiFoot: "يتم تحديث المؤشرات تلقائيًا عند ربط مصادر حقيقية.",
+      tabIdentity: "الهوية والصراع",
+      tabArchitecture: "معمارية الفصوص (Tri‑Lobe)",
+      tabRoadmap: "المسار والوجهة",
+      tabImpact: "الجدوى والأثر",
+      card1Title: "جوهر الهوية",
+      card1Body: "تعريف السيادة المعرفية وحوكمة الوصول كحق رقمي أصيل.",
+      card2Title: "التهديدات",
+      card2Body: "الاحتكار، حبس البيانات، التتبع الخوارزمي، وفقدان السياق.",
+      card3Title: "الاستجابة",
+      card3Body: "بروتوكولات مفتوحة + وكلاء + طبقة قياس عادلة.",
+      modal: {
+        identity_core: { title: "جوهر الهوية", body: "السيادة المعرفية تعني امتلاك قرار المعرفة: مصدرها، سياقها، من يراها، وكيف تُستخدم. ليست ميزة… بل حق." },
+        identity_threats: { title: "التهديدات", body: "المنصات تُعيد تشكيل وعينا عبر خوارزميات التوصية، وتُغلق البيانات داخل أنظمة لا تسمح بالنقل أو التدقيق." },
+        identity_response: { title: "الاستجابة", body: "تصميم سيادي: هوية قابلة للتحقق، بيانات قابلة للنقل، سجلات شفافة، ووكلاء يحترمون نوايا المستخدم." }
+      },
+      chart1Title: "مقارنة: المستهدف vs الواقع",
+      chart1Hint: "Radar",
+      chart2Title: "نضج الفصوص",
+      chart2Hint: "Bar",
+      chart3Title: "تقدم الجاهزية",
+      chart3Hint: "Line",
+      chart4Title: "توزيع الأثر",
+      chart4Hint: "Doughnut",
+      archA: "Lobe‑A: الهوية والسياسات",
+      archB: "Lobe‑B: البيانات والقياس",
+      archC: "Lobe‑C: الوكلاء والبروتوكولات",
+      archAList: ["DID/Keys", "سياسات وصول", "التوقيع والتحقق"],
+      archBList: ["طبقة بيانات سيادية", "مخططات قياس", "سجل تغييرات"],
+      archCList: ["Agents", "Activity Protocol", "Orchestration"],
+      roadTitle: "خارطة الطريق",
+      roadList: ["v1.0 — Manifesto Dashboard", "v1.1 — Agent Layer", "v1.2 — Metrics + Governance"],
+      impactEcoTitle: "الأثر الاقتصادي",
+      impactEcoBody: "خفض تكلفة الوساطة ورفع قيمة البيانات المحلية عبر الحوكمة والشفافية.",
+      impactSocTitle: "الأثر الاجتماعي",
+      impactSocBody: "تمكين الأفراد وتقليل التلاعب وزيادة المساءلة.",
+      footerLine: "كيان سيادي… لا واجهة فقط."
+    },
+    en: {
+      statusLine: "SYSTEM STATUS: SOVEREIGN ONLINE • Static Pages — no build required",
+      heroTitle: "Sovereign Dashboard",
+      heroSub: "A multilingual interactive cockpit for cognitive sovereignty: Identity • Architecture • Roadmap • Impact.",
+      quoteLine: "“You’re not writing software… you’re writing history.”",
+      kpiTitle: "Sovereign KPIs",
+      kpi1Label: "Transparency",
+      kpi1Val: "92%",
+      kpi2Label: "Privacy",
+      kpi2Val: "89%",
+      kpi3Label: "Trust",
+      kpi3Val: "86%",
+      kpiFoot: "KPIs can be wired to real data sources anytime.",
+      tabIdentity: "Identity & Conflict",
+      tabArchitecture: "Tri‑Lobe Architecture",
+      tabRoadmap: "Roadmap & Destination",
+      tabImpact: "Feasibility & Impact",
+      card1Title: "Identity Core",
+      card1Body: "Define sovereignty as a native digital right: access governance & agency.",
+      card2Title: "Threats",
+      card2Body: "Platform capture, data lock‑in, algorithmic tracking, context collapse.",
+      card3Title: "Response",
+      card3Body: "Open protocols + agents + fair measurement layer.",
+      modal: {
+        identity_core: { title: "Identity Core", body: "Cognitive sovereignty means owning the decision of knowledge: origin, context, visibility, and use. Not a feature— a right." },
+        identity_threats: { title: "Threats", body: "Platforms shape attention with opaque recommenders and lock data inside systems that resist portability and audit." },
+        identity_response: { title: "Response", body: "Sovereign design: verifiable identity, portable data, transparent logs, and agents that respect user intent." }
+      },
+      chart1Title: "Target vs Reality",
+      chart1Hint: "Radar",
+      chart2Title: "Lobe Maturity",
+      chart2Hint: "Bar",
+      chart3Title: "Readiness Progress",
+      chart3Hint: "Line",
+      chart4Title: "Impact Mix",
+      chart4Hint: "Doughnut",
+      archA: "Lobe‑A: Identity & Policy",
+      archB: "Lobe‑B: Data & Metrics",
+      archC: "Lobe‑C: Agents & Protocols",
+      archAList: ["DID/Keys", "Access policy", "Signing & verification"],
+      archBList: ["Sovereign data layer", "Metrics schemas", "Change log"],
+      archCList: ["Agents", "Activity Protocol", "Orchestration"],
+      roadTitle: "Roadmap",
+      roadList: ["v1.0 — Manifesto Dashboard", "v1.1 — Agent Layer", "v1.2 — Metrics + Governance"],
+      impactEcoTitle: "Economic Impact",
+      impactEcoBody: "Reduce middle‑layer cost and increase local data value through governance and transparency.",
+      impactSocTitle: "Social Impact",
+      impactSocBody: "Empower individuals, reduce manipulation, increase accountability.",
+      footerLine: "A sovereign entity… not just a UI."
+    }
+  };
+
+  const els = (id) => document.getElementById(id);
+
+  // state
+  let lang = localStorage.getItem("cometx_lang") || "ar";
+  let theme = localStorage.getItem("cometx_theme") || "dark";
+  let charts = {};
+
+  function applyTheme() {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    els("btnTheme").textContent = theme === "dark" ? "🌙" : "☀️";
+  }
+
+  function applyLang() {
+    const t = I18N[lang];
+
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+    document.body.style.fontFamily = (lang === "ar")
+      ? "Tajawal, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      : "Inter, Tajawal, system-ui, -apple-system, Segoe UI, Roboto, Arial";
+
+    // top/hero
+    els("statusLine").textContent = t.statusLine;
+    els("heroTitle").textContent = t.heroTitle;
+    els("heroSub").textContent = t.heroSub;
+    els("quoteLine").textContent = t.quoteLine;
+    els("kpiTitle").textContent = t.kpiTitle;
+    els("kpi1Label").textContent = t.kpi1Label; els("kpi1Val").textContent = t.kpi1Val;
+    els("kpi2Label").textContent = t.kpi2Label; els("kpi2Val").textContent = t.kpi2Val;
+    els("kpi3Label").textContent = t.kpi3Label; els("kpi3Val").textContent = t.kpi3Val;
+    els("kpiFoot").textContent = t.kpiFoot;
+
+    // tabs
+    els("tabIdentity").textContent = t.tabIdentity;
+    els("tabArchitecture").textContent = t.tabArchitecture;
+    els("tabRoadmap").textContent = t.tabRoadmap;
+    els("tabImpact").textContent = t.tabImpact;
+
+    // cards
+    els("card1Title").textContent = t.card1Title; els("card1Body").textContent = t.card1Body;
+    els("card2Title").textContent = t.card2Title; els("card2Body").textContent = t.card2Body;
+    els("card3Title").textContent = t.card3Title; els("card3Body").textContent = t.card3Body;
+
+    // charts titles
+    els("chart1Title").textContent = t.chart1Title; els("chart1Hint").textContent = t.chart1Hint;
+    els("chart2Title").textContent = t.chart2Title; els("chart2Hint").textContent = t.chart2Hint;
+    els("chart3Title").textContent = t.chart3Title; els("chart3Hint").textContent = t.chart3Hint;
+    els("chart4Title").textContent = t.chart4Title; els("chart4Hint").textContent = t.chart4Hint;
+
+    // architecture lists
+    els("archA").textContent = t.archA;
+    els("archB").textContent = t.archB;
+    els("archC").textContent = t.archC;
+
+    els("archAList").innerHTML = t.archAList.map(x => `<li>${x}</li>`).join("");
+    els("archBList").innerHTML = t.archBList.map(x => `<li>${x}</li>`).join("");
+    els("archCList").innerHTML = t.archCList.map(x => `<li>${x}</li>`).join("");
+
+    // roadmap list
+    els("roadTitle").textContent = t.roadTitle;
+    els("roadList").innerHTML = t.roadList.map(x => `<li>${x}</li>`).join("");
+
+    // impact
+    els("impactEcoTitle").textContent = t.impactEcoTitle;
+    els("impactEcoBody").textContent = t.impactEcoBody;
+    els("impactSocTitle").textContent = t.impactSocTitle;
+    els("impactSocBody").textContent = t.impactSocBody;
+
+    // footer
+    els("footerLine").textContent = t.footerLine;
+
+    // live button
+    els("btnLive").href = SITE.liveUrl;
+
+    // rebuild charts with translated labels
+    buildCharts();
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
+    els("view-" + tabId).classList.remove("hidden");
+    document.querySelectorAll(".tab").forEach(b => {
+      const active = b.dataset.tab === tabId;
+      b.classList.toggle("tab-active", active);
+      b.classList.toggle("tab-idle", !active);
+    });
+  }
+
+  function openModal(key) {
+    const t = I18N[lang];
+    const data = t.modal[key];
+    if (!data) return;
+    els("modalTitle").textContent = data.title;
+    els("modalBody").textContent = data.body;
+    const m = els("modal");
+    m.classList.remove("hidden");
+    m.classList.add("flex");
+  }
+  function closeModal() {
+    const m = els("modal");
+    m.classList.add("hidden");
+    m.classList.remove("flex");
+  }
+
+  function killCharts() {
+    Object.values(charts).forEach(c => { try { c.destroy(); } catch(e){} });
+    charts = {};
+  }
+
+  function buildCharts() {
+    if (!window.Chart) return;
+    killCharts();
+
+    Chart.defaults.font.family = (lang === "ar")
+      ? "Tajawal, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      : "Inter, Tajawal, system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    Chart.defaults.color = "rgba(226,232,240,.85)";
+
+    // Identity radar labels
+    const labels = (lang === "ar")
+      ? ["سيادة","شفافية","خصوصية","قابلية النقل","قابلية التتبع"]
+      : ["Sovereignty","Transparency","Privacy","Portability","Auditability"];
+
+    charts.identity = new Chart(document.getElementById("chartIdentity"), {
+      type: "radar",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: (lang === "ar") ? "المستهدف" : "Target",
+            data: [95, 90, 92, 88, 85],
+            borderColor: "#22d3ee",
+            backgroundColor: "rgba(34,211,238,.18)",
+            pointBackgroundColor: "#22d3ee"
+          },
+          {
+            label: (lang === "ar") ? "الواقع" : "Reality",
+            data: [60, 40, 35, 30, 25],
+            borderColor: "#fb7185",
+            backgroundColor: "rgba(251,113,133,.12)",
+            pointBackgroundColor: "#fb7185"
+          }
+        ]
+      },
+      options: {
+        scales: {
+          r: {
+            grid: { color: "rgba(148,163,184,.18)" },
+            angleLines: { color: "rgba(148,163,184,.18)" },
+            ticks: { showLabelBackdrop: false }
+          }
+        },
+        plugins: { legend: { position: "top", labels: { color: "rgba(226,232,240,.9)" } } }
+      }
+    });
+
+    charts.arch = new Chart(document.getElementById("chartArchitecture"), {
+      type: "bar",
+      data: {
+        labels: ["Lobe‑A","Lobe‑B","Lobe‑C"],
+        datasets: [{
+          label: (lang === "ar") ? "نضج (%)" : "Maturity (%)",
+          data: [65, 50, 40],
+          backgroundColor: ["#22c55e","#22d3ee","#a78bfa"]
+        }]
+      },
+      options: {
+        indexAxis: "y",
+        scales: {
+          x: { grid: { color: "rgba(148,163,184,.12)" }, max: 100 },
+          y: { grid: { display: false } }
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    charts.road = new Chart(document.getElementById("chartRoadmap"), {
+      type: "line",
+      data: {
+        labels: ["v1.0","v1.1","v1.2"],
+        datasets: [{
+          label: (lang === "ar") ? "الجاهزية" : "Readiness",
+          data: [45, 70, 85],
+          borderColor: "#60a5fa",
+          backgroundColor: "rgba(96,165,250,.18)",
+          tension: .35,
+          fill: true
+        }]
+      },
+      options: {
+        scales: {
+          x: { grid: { color: "rgba(148,163,184,.12)" } },
+          y: { grid: { color: "rgba(148,163,184,.12)" }, min: 0, max: 100 }
+        },
+        plugins: { legend: { position: "bottom" } }
+      }
+    });
+
+    const impactLabels = (lang === "ar")
+      ? ["اقتصادي","اجتماعي","تنظيمي","ابتكار"]
+      : ["Economic","Social","Regulatory","Innovation"];
+
+    charts.impact = new Chart(document.getElementById("chartImpact"), {
+      type: "doughnut",
+      data: {
+        labels: impactLabels,
+        datasets: [{
+          data: [35, 25, 20, 20],
+          backgroundColor: ["#34d399","#60a5fa","#f59e0b","#f472b6"],
+          borderColor: "rgba(255,255,255,.08)"
+        }]
+      },
+      options: {
+        plugins: { legend: { position: "right", labels: { color: "rgba(226,232,240,.9)" } } }
+      }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // tabs
+    document.querySelectorAll(".tab").forEach(btn => {
+      btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+    });
+
+    // modal
+    els("modalClose").addEventListener("click", closeModal);
+    els("modal").addEventListener("click", (e) => { if (e.target === els("modal")) closeModal(); });
+
+    // theme
+    applyTheme();
+    els("btnTheme").addEventListener("click", () => {
+      theme = (theme === "dark") ? "light" : "dark";
+      localStorage.setItem("cometx_theme", theme);
+      applyTheme();
+    });
+
+    // lang
+    els("btnLang").addEventListener("click", () => {
+      lang = (lang === "ar") ? "en" : "ar";
+      localStorage.setItem("cometx_lang", lang);
+      applyLang();
+    });
+
+    // initial
+    applyLang();
+    switchTab("identity");
+  });
+</script>
 </body>
 </html>
