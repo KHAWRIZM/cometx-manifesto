@@ -1,94 +1,541 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GraTech: لوحة القيادة السيادية | Comet-X</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Tajawal', sans-serif; }
-        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
-        .lobe-card { transition: all 0.3s ease; cursor: pointer; }
-        .lobe-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        .active-tab { border-bottom: 3px solid #0e7490; color: #0e7490; font-weight: bold; }
-        .inactive-tab { color: #64748b; }
-        .fade-in { animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#05040b"/>
+<title>GraTech • Comet‑X | Sovereign Control Room</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg-deep: #05040b;
+    --text-main: rgba(226, 232, 240, 0.9);
+    --text-muted: rgba(226, 232, 240, 0.6);
+    --neon-cyan: #22d3ee;
+    --neon-violet: #a78bfa;
+    --neon-green: #34d399;
+  }
+  
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: var(--bg-deep);
+    color: var(--text-main);
+    font-family: 'Tajawal', 'Inter', 'Noto Sans SC', sans-serif;
+    overflow-x: hidden;
+    margin: 0;
+  }
+
+  /* Mythic Background Effects */
+  .aurora-bg {
+    position: fixed; inset: 0; z-index: -1;
+    background: 
+      radial-gradient(circle at 15% 15%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 85% 20%, rgba(167, 139, 250, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 50% 90%, rgba(52, 211, 153, 0.05) 0%, transparent 50%);
+    animation: pulseGlow 10s ease-in-out infinite alternate;
+  }
+  @keyframes pulseGlow { from { opacity: 0.8; } to { opacity: 1; } }
+
+  .noise-overlay {
+    position: fixed; inset: 0; z-index: -1; opacity: 0.03; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
+  /* Components */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border-radius: 1.5rem;
+  }
+  
+  .chip {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+  }
+  .chip:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); }
+
+  .tab-btn { color: var(--text-muted); border-bottom: 2px solid transparent; }
+  .tab-btn.active { color: var(--neon-cyan); border-bottom-color: var(--neon-cyan); font-weight: 700; }
+
+  .brain-lobe {
+    transition: all 0.3s ease; cursor: pointer; fill-opacity: 0.2; stroke-width: 1.5;
+  }
+  .brain-lobe:hover { fill-opacity: 0.4; filter: drop-shadow(0 0 8px rgba(34,211,238,0.3)); transform: scale(1.01); }
+  .brain-lobe.active { fill-opacity: 0.6; stroke: white; filter: drop-shadow(0 0 15px rgba(34,211,238,0.5)); }
+
+  /* Typography Utilities */
+  .font-display { font-weight: 800; letter-spacing: -0.02em; }
+  .text-glow { text-shadow: 0 0 20px rgba(34,211,238,0.2); }
+  
+  /* Direction Helpers */
+  [dir="rtl"] .space-e-2 > :not([hidden]) ~ :not([hidden]) { margin-left: 0; margin-right: 0.5rem; }
+  [dir="ltr"] .space-e-2 > :not([hidden]) ~ :not([hidden]) { margin-right: 0; margin-left: 0.5rem; }
+</style>
 </head>
-<body class="bg-stone-50 text-slate-800 min-h-screen flex flex-col overflow-x-hidden">
+<body>
 
-    <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
-                <h1 class="text-xl font-bold tracking-wide text-slate-900">GraTech <span class="text-cyan-700">Comet-X</span></h1>
-            </div>
-            <div class="text-xs font-mono text-slate-500 hidden sm:block">
-                SYSTEM STATUS: <span class="text-emerald-600 font-bold">SOVEREIGN ONLINE</span>
-            </div>
-        </div>
-    </header>
+<div class="aurora-bg"></div>
+<div class="noise-overlay"></div>
 
-    <main class="flex-grow container mx-auto px-4 py-8">
-        <section class="mb-12 text-center max-w-4xl mx-auto fade-in">
-            <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
-                استرداد السيادة المعرفية
-            </h2>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border-r-4 border-cyan-700 text-right relative overflow-hidden">
-                <p class="text-lg md:text-xl text-slate-700 italic leading-relaxed">
-                    "نحن لا نبني متصفحاً؛ نحن نبني كياناً رقمياً يسترد حق الإنسان في سيادته المعرفية."
-                </p>
-                <div class="mt-4 text-sm font-bold text-cyan-800">— رؤية مستوحاة من عقلية سليمان الشمري</div>
-            </div>
-            <p class="mt-8 text-slate-600 text-lg max-w-2xl mx-auto">
-                استكشف ركائز الكيان الرقمي الجديد عبر لوحة التحكم التفاعلية أدناه.
-            </p>
-        </section>
+<header class="sticky top-0 z-50 p-4">
+  <div class="max-w-7xl mx-auto glass-panel px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-4">
+      <div class="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]"></div>
+      <div>
+        <h1 class="font-display text-xl tracking-wide text-white">GraTech <span class="text-cyan-400">Comet‑X</span></h1>
+        <div id="statusText" class="text-[10px] uppercase tracking-wider text-slate-400 font-mono mt-0.5"></div>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <select id="langSelect" class="chip px-3 py-1.5 rounded-lg text-xs font-mono text-slate-300 outline-none cursor-pointer">
+        <option value="ar">AR (العربية)</option>
+        <option value="en">EN (English)</option>
+        <option value="fr">FR (Français)</option>
+        <option value="ru">RU (Русский)</option>
+        <option value="zh">ZH (中文)</option>
+      </select>
+      <a href="https://github.com/KHAWRIZM/cometx-manifesto" target="_blank" class="chip px-3 py-1.5 rounded-lg text-xs text-cyan-300 hover:text-white transition">GitHub ↗</a>
+    </div>
+  </div>
+</header>
 
-        <nav class="flex justify-center mb-8 border-b border-stone-200 overflow-x-auto">
-            <button onclick="switchTab('identity')" id="tab-identity" class="active-tab px-6 py-3 mx-2 whitespace-nowrap transition-colors">الهوية والصراع</button>
-            <button onclick="switchTab('architecture')" id="tab-architecture" class="inactive-tab px-6 py-3 mx-2 whitespace-nowrap transition-colors">معمارية الفصوص (Tri-Lobe)</button>
-            <button onclick="switchTab('roadmap')" id="tab-roadmap" class="inactive-tab px-6 py-3 mx-2 whitespace-nowrap transition-colors">المسار والوجهة</button>
-            <button onclick="switchTab('impact')" id="tab-impact" class="inactive-tab px-6 py-3 mx-2 whitespace-nowrap transition-colors">الجدوى والأثر</button>
-        </nav>
+<main class="max-w-7xl mx-auto px-4 pb-20 space-y-8">
 
-        <div id="view-identity" class="fade-in">
-            <!-- ... (محتوى تبويب الهوية) ... -->
+  <section class="glass-panel p-8 md:p-12 relative overflow-hidden">
+    <div class="relative z-10 max-w-4xl">
+      <h2 id="heroTitle" class="text-4xl md:text-6xl font-display text-white mb-6 leading-tight text-glow"></h2>
+      <p id="heroDesc" class="text-lg md:text-xl text-slate-300 leading-relaxed max-w-2xl mb-8"></p>
+      
+      <div class="flex flex-wrap gap-2 mb-8" id="heroChips">
         </div>
-        <div id="view-architecture" class="hidden fade-in">
-            <!-- ... (محتوى تبويب المعمارية) ... -->
-        </div>
-        <div id="view-roadmap" class="hidden fade-in">
-            <!-- ... (محتوى تبويب المسار) ... -->
-        </div>
-        <div id="view-impact" class="hidden fade-in">
-            <!-- ... (محتوى تبويب الأثر) ... -->
-        </div>
-    </main>
 
-    <footer class="bg-white border-t border-stone-200 py-6 mt-8">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-slate-800 font-bold text-lg mb-2">"أنت لا تكتب برنامجاً.. أنت تكتب التاريخ."</p>
-            <p class="text-slate-500 text-sm font-mono">
-                🚀 GrAtechX - Sovereign System Online | v1.0.0-Manifesto
-            </p>
-        </div>
-    </footer>
+      <div class="border-t border-white/10 pt-6">
+        <p id="heroQuote" class="text-sm font-mono text-cyan-200/80 italic"></p>
+      </div>
+    </div>
+    <div class="absolute -right-20 -top-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+  </section>
 
-    <script>
-        (function() {
-            const state = { /* ... */ };
-            function switchTab(tabId) { /* ... */ }
-            function showLobeDetail(lobeKey) { /* ... */ }
-            window.switchTab = switchTab;
-            window.showLobeDetail = showLobeDetail;
-            document.addEventListener('DOMContentLoaded', () => {
-                // ... (كود تهيئة الرسوم البيانية)
-            });
-        })();
-    </script>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <div class="lg:col-span-2 glass-panel p-8 flex flex-col">
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <h3 id="brainTitle" class="text-2xl font-display text-white"></h3>
+          <p id="brainSub" class="text-sm text-slate-400 mt-1"></p>
+        </div>
+        <div class="px-2 py-1 rounded bg-cyan-900/30 border border-cyan-500/30 text-cyan-400 text-[10px] font-mono animate-pulse">LIVE SYSTEM</div>
+      </div>
+
+      <div class="flex-grow flex items-center justify-center relative py-4">
+        <svg viewBox="0 0 400 300" class="w-full max-w-md drop-shadow-2xl">
+          <defs>
+            <linearGradient id="gradA" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#0e7490"/></linearGradient>
+            <linearGradient id="gradB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
+            <linearGradient id="gradC" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#059669"/></linearGradient>
+          </defs>
+          
+          <path id="lobeA" data-key="cortex" class="brain-lobe" d="M140,150 Q120,50 200,40 Q280,50 260,150 Z" stroke="#22d3ee" fill="url(#gradA)" />
+          <path id="lobeB" data-key="foundry" class="brain-lobe" d="M130,160 Q50,180 80,260 Q180,280 190,170 Z" stroke="#a78bfa" fill="url(#gradB)" />
+          <path id="lobeC" data-key="sentinel" class="brain-lobe" d="M270,160 Q350,180 320,260 Q220,280 210,170 Z" stroke="#34d399" fill="url(#gradC)" />
+          
+          <line x1="200" y1="140" x2="150" y2="200" stroke="rgba(255,255,255,0.1)" stroke-dasharray="4" />
+          <line x1="200" y1="140" x2="250" y2="200" stroke="rgba(255,255,255,0.1)" stroke-dasharray="4" />
+          <line x1="150" y1="200" x2="250" y2="200" stroke="rgba(255,255,255,0.1)" stroke-dasharray="4" />
+        </svg>
+        
+        <div id="lobeInfo" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300">
+          <div class="glass-panel p-4 bg-black/80 max-w-[200px] text-center border-cyan-500/50">
+            <h4 id="infoTitle" class="text-cyan-300 font-bold mb-1"></h4>
+            <p id="infoDesc" class="text-xs text-slate-300 leading-snug"></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mt-6 bg-black/40 rounded-lg p-3 font-mono text-[11px] text-slate-400 border border-white/5 h-24 overflow-y-auto" id="traceLog">
+        <div class="text-emerald-500">> SYSTEM_INIT_COMPLETE</div>
+        <div class="text-blue-400">> LOADED_MODULE: I18N_Engine_v5</div>
+        <div class="text-purple-400">> WAITING_FOR_INPUT...</div>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="glass-panel p-6">
+        <h3 id="kpiHeader" class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4"></h3>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center p-3 rounded bg-white/5 border border-white/5">
+            <span id="kpi1Label" class="text-sm text-slate-300"></span>
+            <span class="text-emerald-400 font-mono font-bold">100%</span>
+          </div>
+          <div class="flex justify-between items-center p-3 rounded bg-white/5 border border-white/5">
+            <span id="kpi2Label" class="text-sm text-slate-300"></span>
+            <span class="text-cyan-400 font-mono font-bold">~0.00$</span>
+          </div>
+          <div class="flex justify-between items-center p-3 rounded bg-white/5 border border-white/5">
+            <span id="kpi3Label" class="text-sm text-slate-300"></span>
+            <span class="text-violet-400 font-mono font-bold">v1.2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel p-6 border-amber-500/20 relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-4 opacity-10">
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z"/></svg>
+        </div>
+        <h3 id="khHeader" class="text-lg font-display text-amber-100 mb-2"></h3>
+        <p id="khBody" class="text-sm text-amber-100/70 leading-relaxed"></p>
+        <div class="mt-4 pt-4 border-t border-amber-500/20">
+          <span class="text-[10px] font-mono text-amber-500 uppercase tracking-widest">Legacy Protocol Active</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="glass-panel p-2">
+    <div class="flex gap-2 overflow-x-auto p-2 mb-4 border-b border-white/5" id="tabsNav">
+      <button class="tab-btn active px-4 py-2 text-sm transition" onclick="switchTab('roadmap')" id="btnRoadmap">Roadmap</button>
+      <button class="tab-btn px-4 py-2 text-sm transition" onclick="switchTab('impact')" id="btnImpact">Impact</button>
+      <button class="tab-btn px-4 py-2 text-sm transition" onclick="switchTab('specs')" id="btnSpecs">Specs</button>
+    </div>
+
+    <div id="tab-roadmap" class="p-4 md:p-6 tab-content animate-fade-in">
+      <div class="relative border-l-2 border-slate-700 ml-3 space-y-8" id="roadmapContainer"></div>
+    </div>
+
+    <div id="tab-impact" class="p-4 md:p-6 tab-content hidden animate-fade-in">
+      <div class="grid md:grid-cols-2 gap-8 items-center">
+        <div class="h-64 relative w-full">
+          <canvas id="impactChart"></canvas>
+        </div>
+        <div id="impactText" class="text-slate-300 text-sm leading-relaxed"></div>
+      </div>
+    </div>
+
+    <div id="tab-specs" class="p-4 md:p-6 tab-content hidden animate-fade-in">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center font-mono text-xs" id="specsGrid"></div>
+    </div>
+  </section>
+
+  <footer class="text-center py-8 border-t border-white/5">
+    <p class="text-slate-500 text-xs font-mono">GraTech Comet-X • Sovereign Entity • <span id="footerMotto"></span></p>
+  </footer>
+
+</main>
+
+<script>
+  // --- The 5-Language Brain (I18N) ---
+  const I18N = {
+    ar: {
+      status: "النظام السيادي: متصل",
+      heroTitle: "غرفة التحكم الأسطورية للسيادة المعرفية",
+      heroDesc: "Comet-X ليس متصفحاً، بل كيان يسترد حق الإنسان في تشكيل واقعه الرقمي. من هنا، نراقب المنطق، نتحقق من البيانات، ونرفض التبعية.",
+      heroChips: ["سيادة مطلقة", "تدقيق محلي", "ذكاء نظيف", "بدون تتبع"],
+      heroQuote: "«الخوارزمية التي لا تفهمها، تستعبدك.»",
+      brainTitle: "بنية الفصوص الثلاثة",
+      brainSub: "اضغط على الفصوص للكشف عن الطبقات",
+      lobes: {
+        cortex: { t: "الفص المفكر", d: "إدارة النية والمنطق (Local LLM)" },
+        foundry: { t: "الفص المنشئ", d: "تنفيذ الأدوات وبناء الأكواد" },
+        sentinel: { t: "الفص الحارس", d: "حماية الخصوصية وتدقيق المخرجات" }
+      },
+      kpiHeader: "مؤشرات الأداء السيادية",
+      kpiLabels: ["شفافية الكود", "التكلفة التشغيلية", "الإصدار"],
+      khHeader: "إرث الخوارزمي",
+      khBody: "نحن لا نكتب الكود عبثاً. نحن نتبع خطى الخوارزمي في تأسيس 'المنهجية'. كل سطر برمجي هنا هو خطوة منطقية محسوبة لاستعادة الحق في المعرفة.",
+      tabs: { roadmap: "خارطة الطريق", impact: "الأثر", specs: "المواصفات" },
+      footerMotto: "أنت لا تكتب برنامجاً.. أنت تكتب التاريخ.",
+      roadmap: [
+        { t: "التأسيس", d: "بناء النواة السيادية وعزل التبعيات الخارجية." },
+        { t: "التمكين", d: "دمج الذكاء المحلي (Ollama) مباشرة في المتصفح." },
+        { t: "الانتشار", d: "بروتوكول المشاركة الآمن بين الأقران (P2P)." }
+      ],
+      impactText: "يظهر الرسم البياني تفوق النموذج السيادي (الأخضر) على النموذج التقليدي (الرمادي) في معايير الخصوصية والتحكم، مع انعدام التكلفة تقريباً.",
+      specs: ["Local-First", "No-Cloud", "P2P Sync", "Encrypted"]
+    },
+    en: {
+      status: "SOVEREIGN SYSTEM: ONLINE",
+      heroTitle: "Mythic Control Room for Cognitive Sovereignty",
+      heroDesc: "Comet-X is not a browser; it is an entity reclaiming human rights to digital reality. From here, we audit logic, verify data, and reject dependency.",
+      heroChips: ["Absolute Sovereignty", "Local Audit", "Clean AI", "Zero Tracking"],
+      heroQuote: "«The algorithm you do not understand, enslaves you.»",
+      brainTitle: "Tri-Lobe Architecture",
+      brainSub: "Click lobes to reveal layers",
+      lobes: {
+        cortex: { t: "The Cortex", d: "Intent & Logic Manager (Local LLM)" },
+        foundry: { t: "The Foundry", d: "Tool Execution & Code Generation" },
+        sentinel: { t: "The Sentinel", d: "Privacy Guard & Output Audit" }
+      },
+      kpiHeader: "SOVEREIGN KPIs",
+      kpiLabels: ["Code Transparency", "Op. Cost", "Version"],
+      khHeader: "The Khwarizmi Legacy",
+      khBody: "We do not write code in vain. We follow Al-Khwarizmi in establishing 'methodology'. Every line of code is a calculated logical step towards reclaiming knowledge rights.",
+      tabs: { roadmap: "Roadmap", impact: "Impact", specs: "Specs" },
+      footerMotto: "You are not writing software.. You are writing history.",
+      roadmap: [
+        { t: "Foundation", d: "Building sovereign core, isolating dependencies." },
+        { t: "Empowerment", d: "Integrating Local AI (Ollama) directly." },
+        { t: "Expansion", d: "Secure Peer-to-Peer (P2P) protocol." }
+      ],
+      impactText: "The chart shows the Sovereign Model (Green) outperforming the Traditional Model (Gray) in privacy and control metrics, with near-zero cost.",
+      specs: ["Local-First", "No-Cloud", "P2P Sync", "Encrypted"]
+    },
+    fr: {
+      status: "SYSTÈME SOUVERAIN: EN LIGNE",
+      heroTitle: "Salle de Contrôle Mythique pour la Souveraineté Cognitive",
+      heroDesc: "Comet-X n'est pas un navigateur, c'est une entité qui réclame le droit humain à la réalité numérique. Ici, nous auditons la logique et rejetons la dépendance.",
+      heroChips: ["Souveraineté Absolue", "Audit Local", "IA Propre", "Zéro Traçage"],
+      heroQuote: "«L'algorithme que vous ne comprenez pas vous asservit.»",
+      brainTitle: "Architecture Tri-Lobe",
+      brainSub: "Cliquez pour révéler les couches",
+      lobes: {
+        cortex: { t: "Le Cortex", d: "Gestion de l'Intention (Local LLM)" },
+        foundry: { t: "La Fonderie", d: "Exécution d'Outils & Code" },
+        sentinel: { t: "La Sentinelle", d: "Garde de Vie Privée" }
+      },
+      kpiHeader: "INDICATEURS SOUVERAINS",
+      kpiLabels: ["Transparence", "Coût", "Version"],
+      khHeader: "Héritage d'Al-Khwarizmi",
+      khBody: "Nous suivons Al-Khwarizmi en établissant une 'méthodologie'. Chaque ligne de code est une étape logique vers la reconquête des droits au savoir.",
+      tabs: { roadmap: "Feuille de route", impact: "Impact", specs: "Spéc." },
+      footerMotto: "Vous n'écrivez pas un logiciel.. Vous écrivez l'histoire.",
+      roadmap: [
+        { t: "Fondation", d: "Noyau souverain, isolation des dépendances." },
+        { t: "Autonomisation", d: "Intégration IA Locale (Ollama)." },
+        { t: "Expansion", d: "Protocole P2P sécurisé." }
+      ],
+      impactText: "Le graphique montre le modèle souverain (vert) surpassant le modèle traditionnel (gris) en matière de confidentialité.",
+      specs: ["Local-First", "No-Cloud", "P2P Sync", "Encrypted"]
+    },
+    ru: {
+      status: "СУВЕРЕННАЯ СИСТЕМА: ОНЛАЙН",
+      heroTitle: "Мифический Центр Управления Когнитивным Суверенитетом",
+      heroDesc: "Comet-X — это не браузер, это сущность, возвращающая право человека на цифровую реальность. Мы проверяем логику и отвергаем зависимость.",
+      heroChips: ["Абсолютный Суверенитет", "Локальный Аудит", "Чистый ИИ", "Без Слежки"],
+      heroQuote: "«Алгоритм, который вы не понимаете, порабощает вас.»",
+      brainTitle: "Архитектура Tri-Lobe",
+      brainSub: "Нажмите, чтобы раскрыть слои",
+      lobes: {
+        cortex: { t: "Кора (Cortex)", d: "Управление намерениями (Local LLM)" },
+        foundry: { t: "Кузница (Foundry)", d: "Выполнение инструментов и кода" },
+        sentinel: { t: "Страж (Sentinel)", d: "Защита приватности" }
+      },
+      kpiHeader: "СУВЕРЕННЫЕ KPI",
+      kpiLabels: ["Прозрачность", "Стоимость", "Версия"],
+      khHeader: "Наследие Аль-Хорезми",
+      khBody: "Мы следуем за Аль-Хорезми, создавая 'методологию'. Каждая строка кода — это логический шаг к возвращению прав на знания.",
+      tabs: { roadmap: "Дорожная карта", impact: "Влияние", specs: "Спец." },
+      footerMotto: "Вы пишете не программу.. Вы пишете историю.",
+      roadmap: [
+        { t: "Фундамент", d: "Суверенное ядро, изоляция." },
+        { t: "Усиление", d: "Интеграция локального ИИ." },
+        { t: "Расширение", d: "Безопасный P2P протокол." }
+      ],
+      impactText: "График показывает превосходство Суверенной модели (Зеленый) над Традиционной (Серый).",
+      specs: ["Local-First", "No-Cloud", "P2P Sync", "Encrypted"]
+    },
+    zh: {
+      status: "主权系统：在线",
+      heroTitle: "认知主权的史诗控制室",
+      heroDesc: "Comet-X 不仅仅是一个浏览器；它是一个夺回人类数字现实权利的实体。我们审计逻辑，验证数据，拒绝依赖。",
+      heroChips: ["绝对主权", "本地审计", "纯净AI", "零追踪"],
+      heroQuote: "«你不理解的算法会奴役你。»",
+      brainTitle: "三叶架构 (Tri-Lobe)",
+      brainSub: "点击叶片显示层级",
+      lobes: {
+        cortex: { t: "皮层 (Cortex)", d: "意图与逻辑管理 (Local LLM)" },
+        foundry: { t: "铸造厂 (Foundry)", d: "工具执行与代码生成" },
+        sentinel: { t: "哨兵 (Sentinel)", d: "隐私保护与输出审计" }
+      },
+      kpiHeader: "主权指标",
+      kpiLabels: ["代码透明度", "运营成本", "版本"],
+      khHeader: "花拉子密的遗产",
+      khBody: "我们并非徒劳地编写代码。我们追随花拉子密建立“方法论”。每一行代码都是迈向重夺知识权力的逻辑步骤。",
+      tabs: { roadmap: "路线图", impact: "影响", specs: "规格" },
+      footerMotto: "你不是在写软件.. 你在书写历史。",
+      roadmap: [
+        { t: "基石", d: "构建主权核心，隔离外部依赖。" },
+        { t: "赋能", d: "集成完全本地化的AI。" },
+        { t: "扩展", d: "安全的P2P协议。" }
+      ],
+      impactText: "图表显示主权模型（绿色）在隐私和控制指标上优于传统模型（灰色）。",
+      specs: ["Local-First", "No-Cloud", "P2P Sync", "Encrypted"]
+    }
+  };
+
+  // --- Logic ---
+  let currentLang = 'ar';
+  let chartInstance = null;
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    const t = I18N[lang];
+    const isRtl = (lang === 'ar');
+    
+    document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+    document.documentElement.lang = lang;
+
+    // Update Text Content
+    document.getElementById('statusText').innerText = t.status;
+    document.getElementById('heroTitle').innerText = t.heroTitle;
+    document.getElementById('heroDesc').innerText = t.heroDesc;
+    document.getElementById('heroQuote').innerText = t.heroQuote;
+    document.getElementById('brainTitle').innerText = t.brainTitle;
+    document.getElementById('brainSub').innerText = t.brainSub;
+    document.getElementById('kpiHeader').innerText = t.kpiHeader;
+    document.getElementById('kpi1Label').innerText = t.kpiLabels[0];
+    document.getElementById('kpi2Label').innerText = t.kpiLabels[1];
+    document.getElementById('kpi3Label').innerText = t.kpiLabels[2];
+    document.getElementById('khHeader').innerText = t.khHeader;
+    document.getElementById('khBody').innerText = t.khBody;
+    document.getElementById('btnRoadmap').innerText = t.tabs.roadmap;
+    document.getElementById('btnImpact').innerText = t.tabs.impact;
+    document.getElementById('btnSpecs').innerText = t.tabs.specs;
+    document.getElementById('footerMotto').innerText = t.footerMotto;
+    document.getElementById('impactText').innerText = t.impactText;
+
+    // Update Chips
+    const chipsContainer = document.getElementById('heroChips');
+    chipsContainer.innerHTML = '';
+    t.heroChips.forEach(chip => {
+      const sp = document.createElement('span');
+      sp.className = "chip px-3 py-1.5 rounded-full text-xs font-mono text-cyan-100 border-cyan-500/30";
+      sp.innerText = chip;
+      chipsContainer.appendChild(sp);
+    });
+
+    // Update Roadmap
+    const roadContainer = document.getElementById('roadmapContainer');
+    roadContainer.innerHTML = '';
+    t.roadmap.forEach(step => {
+      const div = document.createElement('div');
+      div.className = "relative pl-6 pb-2";
+      div.innerHTML = `
+        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-900 border-2 border-emerald-500"></div>
+        <h4 class="text-white font-bold">${step.t}</h4>
+        <p class="text-slate-400 text-sm mt-1">${step.d}</p>
+      `;
+      roadContainer.appendChild(div);
+    });
+
+    // Update Specs
+    const specsContainer = document.getElementById('specsGrid');
+    specsContainer.innerHTML = '';
+    t.specs.forEach(s => {
+      const d = document.createElement('div');
+      d.className = "p-2 border border-white/10 rounded text-slate-300";
+      d.innerText = s;
+      specsContainer.appendChild(d);
+    });
+
+    // Re-render Chart
+    renderChart(t.tabs.impact);
+    
+    // Add to trace
+    addTrace(`LANG_SWITCHED: ${lang.toUpperCase()}`);
+  }
+
+  // --- Interaction Logic ---
+  document.getElementById('langSelect').addEventListener('change', (e) => {
+    setLanguage(e.target.value);
+  });
+
+  // Brain Lobe Interaction
+  document.querySelectorAll('.brain-lobe').forEach(lobe => {
+    lobe.addEventListener('click', (e) => {
+      // Reset
+      document.querySelectorAll('.brain-lobe').forEach(l => l.classList.remove('active'));
+      e.target.classList.add('active');
+      
+      const key = e.target.getAttribute('data-key');
+      const data = I18N[currentLang].lobes[key];
+      
+      const overlay = document.getElementById('lobeInfo');
+      const title = document.getElementById('infoTitle');
+      const desc = document.getElementById('infoDesc');
+      
+      title.innerText = data.t;
+      desc.innerText = data.d;
+      
+      overlay.classList.remove('opacity-0');
+      addTrace(`LOBE_ACCESS: ${key.toUpperCase()}`);
+    });
+  });
+
+  // Tabs Logic
+  window.switchTab = (tabId) => {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+    
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    // Simple logic to activate button based on function call (simplified)
+    if(tabId === 'roadmap') document.getElementById('btnRoadmap').classList.add('active');
+    if(tabId === 'impact') document.getElementById('btnImpact').classList.add('active');
+    if(tabId === 'specs') document.getElementById('btnSpecs').classList.add('active');
+  };
+
+  // Trace Logic
+  function addTrace(msg) {
+    const log = document.getElementById('traceLog');
+    const line = document.createElement('div');
+    line.innerText = `> ${msg}`;
+    log.appendChild(line);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  // Chart.js Logic
+  function renderChart(labelTitle) {
+    if (chartInstance) chartInstance.destroy();
+    
+    const ctx = document.getElementById('impactChart').getContext('2d');
+    chartInstance = new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: ['Privacy', 'Control', 'Speed', 'Cost (Low)', 'Indep.'],
+        datasets: [{
+          label: 'GraTech',
+          data: [100, 100, 90, 100, 100],
+          backgroundColor: 'rgba(52, 211, 153, 0.2)',
+          borderColor: '#34d399',
+          borderWidth: 2,
+        }, {
+          label: 'Big Tech',
+          data: [20, 30, 85, 40, 10],
+          backgroundColor: 'rgba(148, 163, 184, 0.2)',
+          borderColor: '#94a3b8',
+          borderWidth: 1,
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            grid: { color: 'rgba(255,255,255,0.1)' },
+            angleLines: { color: 'rgba(255,255,255,0.1)' },
+            pointLabels: { color: '#cbd5e1', font: { size: 10 } },
+            suggestedMin: 0,
+            suggestedMax: 100
+          }
+        },
+        plugins: {
+          legend: { labels: { color: '#e2e8f0' } }
+        }
+      }
+    });
+  }
+
+  // Init
+  setLanguage('ar');
+
+</script>
 </body>
 </html>
