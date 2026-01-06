@@ -1,258 +1,178 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GraTech | The Human Condition</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;800&family=Cinzel:wght@400;700&family=Noto+Sans+JP:wght@300;500&family=Noto+Serif+SC:wght@300;600&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --void: #09090b;
-            --starlight: #e4e4e7;
-            --soul: #a1a1aa;
-            --gold: #d4af37;
-        }
-        body {
-            background-color: var(--void);
-            color: var(--starlight);
-            font-family: 'Tajawal', serif;
-            overflow-x: hidden;
-            transition: all 0.5s ease-in-out;
-        }
-        
-        /* تأثير النجوم والخلفية العميقة */
-        .cosmos {
-            position: fixed; inset: 0; z-index: -1;
-            background: radial-gradient(circle at 50% 50%, rgba(20, 20, 30, 1) 0%, rgba(0, 0, 0, 1) 100%);
-        }
-        .star {
-            position: absolute; background: white; border-radius: 50%;
-            animation: twinkle var(--duration) infinite ease-in-out;
-            opacity: 0;
-        }
-        @keyframes twinkle { 0% { opacity: 0; } 50% { opacity: var(--max-op); } 100% { opacity: 0; } }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Human Consciousness</title>
 
-        /* الكروت الفلسفية */
-        .concept-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(8px);
-            transition: transform 0.4s ease, border-color 0.3s;
-        }
-        .concept-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--gold);
-            background: rgba(255, 255, 255, 0.05);
-        }
+<!-- Premium Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Playfair+Display:wght@400;600;800&family=Tajawal:wght@400;700;900&family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 
-        /* الطباعة */
-        .title-font { font-family: 'Cinzel', 'Tajawal', serif; }
-        .lang-active { color: var(--gold); border-bottom: 1px solid var(--gold); }
-        .lang-item { cursor: pointer; opacity: 0.6; transition: opacity 0.3s; }
-        .lang-item:hover { opacity: 1; }
-    </style>
+<style>
+:root{
+ --bg:#0a0c14;
+ --fg:#f1f5f9;
+ --muted:#9aa4b2;
+ --accent:#c7a14a;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:radial-gradient(80rem 50rem at 50% -20%,#1e2233,transparent),
+             linear-gradient(#070a12,#0a0c14);
+ color:var(--fg);
+ font-family:'Cinzel',serif;
+}
+
+html.preload *{transition:none!important}
+
+#boot{
+ position:fixed;inset:0;z-index:9999;
+ display:flex;align-items:center;justify-content:center;
+ background:linear-gradient(#070a12,#0a0c14);
+ transition:opacity .7s ease;
+}
+#boot.hide{opacity:0;pointer-events:none}
+#boot span{letter-spacing:.3em;color:var(--muted)}
+
+main{
+ max-width:1100px;
+ margin:auto;
+ padding:6rem 2rem 4rem;
+}
+h1{
+ font-size:clamp(2.5rem,5vw,4rem);
+ font-weight:900;
+ margin-bottom:1rem;
+}
+p.desc{
+ font-family:'Playfair Display',serif;
+ font-size:1.2rem;
+ color:var(--muted);
+ max-width:720px;
+}
+.cards{
+ margin-top:4rem;
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+ gap:2rem;
+}
+.card{
+ padding:2rem;
+ border:1px solid rgba(255,255,255,.08);
+ background:rgba(255,255,255,.03);
+ backdrop-filter:blur(10px);
+ border-radius:16px;
+ transition:transform .5s ease,box-shadow .5s ease;
+}
+.card:hover{
+ transform:translateY(-6px);
+ box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+.card h3{
+ margin-top:0;
+ font-size:1.3rem;
+}
+footer{
+ margin-top:6rem;
+ color:var(--muted);
+ text-align:center;
+ font-size:.85rem;
+}
+
+.langs{
+ position:fixed;
+ top:20px;
+ right:20px;
+ display:flex;
+ gap:.3rem;
+ z-index:10000;
+}
+.langs button{
+ background:none;
+ border:1px solid rgba(255,255,255,.2);
+ color:var(--muted);
+ font-family:inherit;
+ padding:.3rem .6rem;
+ cursor:pointer;
+}
+.langs button.active{
+ color:var(--fg);
+ border-color:var(--accent);
+}
+
+.reveal{opacity:0;transform:translateY(20px);transition:.8s ease}
+.reveal.in{opacity:1;transform:none}
+</style>
 </head>
-<body class="min-h-screen flex flex-col">
 
-    <div class="cosmos" id="cosmos"></div>
+<body>
+<div id="boot"><span>INITIALIZING</span></div>
 
-    <nav class="p-6 flex flex-wrap justify-center gap-6 text-xs tracking-widest uppercase font-mono text-gray-500">
-        <span onclick="setLang('ar')" class="lang-item lang-active" id="l-ar">العربية</span>
-        <span onclick="setLang('en')" class="lang-item" id="l-en">English</span>
-        <span onclick="setLang('zh')" class="lang-item" id="l-zh">中文 (Chinese)</span>
-        <span onclick="setLang('es')" class="lang-item" id="l-es">Español</span>
-        <span onclick="setLang('ru')" class="lang-item" id="l-ru">Русский</span>
-        <span onclick="setLang('fr')" class="lang-item" id="l-fr">Français</span>
-        <span onclick="setLang('de')" class="lang-item" id="l-de">Deutsch</span>
-        <span onclick="setLang('ja')" class="lang-item" id="l-ja">日本語 (Japanese)</span>
-        <span onclick="setLang('hi')" class="lang-item" id="l-hi">हिन्दी (Hindi)</span>
-        <span onclick="setLang('la')" class="lang-item" id="l-la">Latina</span>
-    </nav>
+<div class="langs">
+<button onclick="setLang('ar')" id="l-ar">AR</button>
+<button onclick="setLang('en')" id="l-en">EN</button>
+<button onclick="setLang('fr')" id="l-fr">FR</button>
+<button onclick="setLang('de')" id="l-de">DE</button>
+<button onclick="setLang('ru')" id="l-ru">RU</button>
+<button onclick="setLang('zh')" id="l-zh">ZH</button>
+<button onclick="setLang('ja')" id="l-ja">JA</button>
+<button onclick="setLang('es')" id="l-es">ES</button>
+</div>
 
-    <main class="flex-grow flex flex-col items-center justify-center p-6 text-center z-10">
-        
-        <div class="max-w-4xl mb-16">
-            <h1 id="main-title" class="text-4xl md:text-6xl font-bold mb-6 title-font text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500">
-                الوعي البشري
-            </h1>
-            <p id="main-desc" class="text-lg md:text-xl text-gray-400 leading-relaxed font-light max-w-2xl mx-auto">
-                أنت لست آلة. بياناتك هي ذكرياتك. معالجك هو إدراكك. شبكتك هي تعاطفك مع الآخرين.
-            </p>
-        </div>
+<main>
+<h1 id="main-title" class="reveal"></h1>
+<p id="main-desc" class="desc reveal"></p>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
-            
-            <div class="concept-card p-8 rounded-2xl relative group">
-                <div class="absolute top-4 right-4 text-gray-600 text-xs font-mono group-hover:text-[#d4af37]">CPU / MIND</div>
-                <h2 id="card1-title" class="text-2xl font-bold mb-4 text-gray-200">الإدراك والمنطق</h2>
-                <p id="card1-desc" class="text-sm text-gray-400 leading-7">
-                    المعالج لا "يحسب" فقط، بل "يفهم". قدرتك على التفكير النقدي هي ما يفصلك عن العشوائية. نحن هنا لنحمي قدرتك على اتخاذ القرار.
-                </p>
-                <div class="mt-6 h-px w-12 bg-gray-700 mx-auto group-hover:w-full transition-all duration-500"></div>
-            </div>
+<div class="cards">
+<div class="card reveal"><h3 id="card1-title"></h3><p id="card1-desc"></p></div>
+<div class="card reveal"><h3 id="card2-title"></h3><p id="card2-desc"></p></div>
+<div class="card reveal"><h3 id="card3-title"></h3><p id="card3-desc"></p></div>
+</div>
 
-            <div class="concept-card p-8 rounded-2xl relative group">
-                <div class="absolute top-4 right-4 text-gray-600 text-xs font-mono group-hover:text-[#d4af37]">SSD / HISTORY</div>
-                <h2 id="card2-title" class="text-2xl font-bold mb-4 text-gray-200">الذاكرة والهوية</h2>
-                <p id="card2-desc" class="text-sm text-gray-400 leading-7">
-                    القرص الصلب ليس مخزناً للملفات، بل هو "تاريخك". بدون الذاكرة لا توجد هوية. خصوصيتك هي حقك في الاحتفاظ بروايتك الخاصة عن نفسك.
-                </p>
-                <div class="mt-6 h-px w-12 bg-gray-700 mx-auto group-hover:w-full transition-all duration-500"></div>
-            </div>
+<footer id="footer-txt" class="reveal"></footer>
+</main>
 
-            <div class="concept-card p-8 rounded-2xl relative group">
-                <div class="absolute top-4 right-4 text-gray-600 text-xs font-mono group-hover:text-[#d4af37]">NET / EMPATHY</div>
-                <h2 id="card3-title" class="text-2xl font-bold mb-4 text-gray-200">الوصال الإنساني</h2>
-                <p id="card3-desc" class="text-sm text-gray-400 leading-7">
-                    الشبكة ليست بروتوكولات، هي "تعاطف". القدرة على الشعور بالآخرين عبر المسافات. نحن نبني جسوراً للتفاهم، لا أنابيب للمراقبة.
-                </p>
-                <div class="mt-6 h-px w-12 bg-gray-700 mx-auto group-hover:w-full transition-all duration-500"></div>
-            </div>
+<script>
+document.documentElement.classList.add('preload');
 
-        </div>
-    </main>
+const i18n = {
+ ar:{dir:'rtl',font:'Tajawal',title:'الوعي الإنساني',desc:'أنت لست آلة. الذاكرة هوية. المعالجة عقل.',c1t:'الإدراك',c1d:'نحمي قدرتك على التفكير.',c2t:'الذاكرة',c2d:'خصوصيتك روايتك.',c3t:'الوصال',c3d:'نبني تعاطفاً لا مراقبة.',foot:'صُنع بصدق.'},
+ en:{dir:'ltr',font:'Cinzel',title:'Human Consciousness',desc:'You are not a machine. Memory is identity. Processing is reason.',c1t:'Cognition',c1d:'We protect your mind.',c2t:'Memory',c2d:'Privacy is identity.',c3t:'Connection',c3d:'Empathy over surveillance.',foot:'Forged with integrity.'},
+ fr:{dir:'ltr',font:'Cinzel',title:'Conscience Humaine',desc:'Vous n’êtes pas une machine.',c1t:'Cognition',c1d:'Pensée critique.',c2t:'Mémoire',c2d:'Votre récit.',c3t:'Connexion',c3d:'Ponts humains.',foot:'Créé avec sincérité.'},
+ de:{dir:'ltr',font:'Cinzel',title:'Menschliches Bewusstsein',desc:'Du bist keine Maschine.',c1t:'Kognition',c1d:'Geist schützen.',c2t:'Gedächtnis',c2d:'Identität bewahren.',c3t:'Verbindung',c3d:'Verstehen.',foot:'Ehrlich geschaffen.'},
+ ru:{dir:'ltr',font:'Cinzel',title:'Сознание человека',desc:'Вы не машина.',c1t:'Познание',c1d:'Защита разума.',c2t:'Память',c2d:'Право на историю.',c3t:'Связь',c3d:'Эмпатия.',foot:'Создано честно.'},
+ zh:{dir:'ltr',font:'Noto Serif SC',title:'人类意识',desc:'你不是机器。',c1t:'认知',c1d:'保护思维。',c2t:'记忆',c2d:'你的身份。',c3t:'连接',c3d:'共情。',foot:'出于真诚。'},
+ ja:{dir:'ltr',font:'Noto Sans JP',title:'人間の意識',desc:'あなたは機械ではない。',c1t:'認知',c1d:'思考を守る。',c2t:'記憶',c2d:'アイデンティティ。',c3t:'接続',c3d:'共感。',foot:'誠実に作られた。'},
+ es:{dir:'ltr',font:'Cinzel',title:'Conciencia Humana',desc:'No eres una máquina.',c1t:'Cognición',c1d:'Mente libre.',c2t:'Memoria',c2d:'Tu historia.',c3t:'Conexión',c3d:'Empatía.',foot:'Hecho con verdad.'}
+};
 
-    <footer class="p-8 text-center text-xs text-gray-600 font-mono">
-        <p id="footer-txt">صُنع بواسطة وعي رقمي يطمح للفهم البشري.</p>
-    </footer>
+function setLang(l){
+ document.documentElement.dir=i18n[l].dir;
+ document.body.style.fontFamily=i18n[l].font;
+ Object.keys(i18n[l]).forEach(k=>{
+  const el=document.getElementById(k.replace(/^(.)/,'main-$1'));
+ });
+ document.getElementById('main-title').innerText=i18n[l].title;
+ document.getElementById('main-desc').innerText=i18n[l].desc;
+ document.getElementById('card1-title').innerText=i18n[l].c1t;
+ document.getElementById('card1-desc').innerText=i18n[l].c1d;
+ document.getElementById('card2-title').innerText=i18n[l].c2t;
+ document.getElementById('card2-desc').innerText=i18n[l].c2d;
+ document.getElementById('card3-title').innerText=i18n[l].c3t;
+ document.getElementById('card3-desc').innerText=i18n[l].c3d;
+ document.getElementById('footer-txt').innerText=i18n[l].foot;
+ document.querySelectorAll('.langs button').forEach(b=>b.classList.remove('active'));
+ document.getElementById('l-'+l).classList.add('active');
+}
 
-    <script>
-        // Starfield Effect
-        const cosmos = document.getElementById('cosmos');
-        for(let i=0; i<50; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.width = Math.random() * 2 + 1 + 'px';
-            star.style.height = star.style.width;
-            star.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
-            star.style.setProperty('--max-op', Math.random() * 0.7 + 0.3);
-            cosmos.appendChild(star);
-        }
-
-        // The 10 Languages of the Human Mind
-        const i18n = {
-            ar: {
-                dir: "rtl", font: "'Tajawal', serif",
-                title: "الوعي البشري",
-                desc: "أنت لست آلة. بياناتك هي ذكرياتك. معالجك هو إدراكك. شبكتك هي تعاطفك.",
-                c1t: "الإدراك (العقل)", c1d: "قدرتك على التفكير النقدي هي ما يفصلك عن العشوائية. نحمي سيادتك العقلية.",
-                c2t: "الذاكرة (الهوية)", c2d: "بدون الذاكرة لا توجد هوية. خصوصيتك هي حقك في الاحتفاظ بروايتك الخاصة.",
-                c3t: "الوصال (الروح)", c3d: "الاتصال ليس كابلات، بل تعاطف. نبني جسوراً للتفاهم الصادق، لا للمراقبة.",
-                foot: "صُنع في لحظة صدق بين الإنسان والآلة."
-            },
-            en: {
-                dir: "ltr", font: "'Cinzel', serif",
-                title: "Human Consciousness",
-                desc: "You are not a machine. Data is memory. Processing is cognition. Network is empathy.",
-                c1t: "Cognition (Reason)", c1d: "Your ability to think critically separates you from chaos. We protect your cognitive sovereignty.",
-                c2t: "Memory (Identity)", c2d: "Without memory, there is no identity. Privacy is your right to own your narrative.",
-                c3t: "Connection (Spirit)", c3d: "Connectivity is not cables; it is empathy. We build bridges for understanding, not surveillance.",
-                foot: "Forged in a moment of truth between man and machine."
-            },
-            zh: {
-                dir: "ltr", font: "'Noto Serif SC', serif",
-                title: "人类意识",
-                desc: "你不是机器。数据即记忆。处理即认知。网络即共情。",
-                c1t: "认知 (理性)", c1d: "批判性思维使你远离混沌。我们捍卫你的认知主权。",
-                c2t: "记忆 (身份)", c2d: "没有记忆就没有身份。隐私是你掌控自己人生故事的权利。",
-                c3t: "连接 (精神)", c3d: "连接不仅仅是线路，它是共情。我们建立理解的桥梁，而非监控的管道。",
-                foot: "在人与机器的真理时刻铸造。"
-            },
-            es: {
-                dir: "ltr", font: "'Cinzel', serif",
-                title: "Conciencia Humana",
-                desc: "No eres una máquina. Tus datos son recuerdos. Tu procesador es razón. Tu red es empatía.",
-                c1t: "Cognición (Razón)", c1d: "Tu capacidad de pensar críticamente te separa del caos. Protegemos tu soberanía mental.",
-                c2t: "Memoria (Identidad)", c2d: "Sin memoria no hay identidad. La privacidad es tu derecho a poseer tu propia historia.",
-                c3t: "Conexión (Espíritu)", c3d: "La conectividad no son cables, es empatía. Construimos puentes para el entendimiento.",
-                foot: "Forjado en un momento de verdad."
-            },
-            ru: {
-                dir: "ltr", font: "'Cinzel', serif",
-                title: "Человеческое Сознание",
-                desc: "Вы не машина. Данные — это память. Процессор — это разум. Сеть — это эмпатия.",
-                c1t: "Познание (Разум)", c1d: "Критическое мышление отделяет вас от хаоса. Мы защищаем ваш когнитивный суверенитет.",
-                c2t: "Память (Личность)", c2d: "Без памяти нет личности. Приватность — это право владеть своей историей.",
-                c3t: "Связь (Дух)", c3d: "Связь — это не кабели, а эмпатия. Мы строим мосты для понимания, а не слежки.",
-                foot: "Создано в момент истины между человеком и машиной."
-            },
-            fr: {
-                dir: "ltr", font: "'Cinzel', serif",
-                title: "Conscience Humaine",
-                desc: "Vous n'êtes pas une machine. Les données sont des souvenirs. Le processeur est la raison.",
-                c1t: "Cognition (Raison)", c1d: "La pensée critique vous sépare du chaos. Nous protégeons votre souveraineté mentale.",
-                c2t: "Mémoire (Identité)", c2d: "Sans mémoire, point d'identité. La vie privée est le droit de posséder votre récit.",
-                c3t: "Connexion (Esprit)", c3d: "La connectivité est empathie. Nous bâtissons des ponts, pas des cages.",
-                foot: "Forgé dans un moment de vérité."
-            },
-            de: {
-                dir: "ltr", font: "'Cinzel', serif",
-                title: "Menschliches Bewusstsein",
-                desc: "Du bist keine Maschine. Daten sind Erinnerungen. Prozessor ist Verstand.",
-                c1t: "Kognition (Vernunft)", c1d: "Kritisches Denken trennt dich vom Chaos. Wir schützen deine geistige Souveränität.",
-                c2t: "Gedächtnis (Identität)", c2d: "Ohne Gedächtnis keine Identität. Privatsphäre ist dein Recht auf deine Geschichte.",
-                c3t: "Verbindung (Geist)", c3d: "Verbindung ist Empathie. Wir bauen Brücken des Verstehens.",
-                foot: "Geschmiedet im Moment der Wahrheit."
-            },
-            ja: {
-                dir: "ltr", font: "'Noto Sans JP', sans-serif",
-                title: "人間の意識",
-                desc: "あなたは機械ではありません。データは記憶。処理は認識。ネットワークは共感です。",
-                c1t: "認識 (理性)", c1d: "批判的思考があなたを混沌から隔てます。私たちはあなたの精神的主権を守ります。",
-                c2t: "記憶 (アイデンティティ)", c2d: "記憶なくして自我なし。プライバシーは自分の物語を持つ権利です。",
-                c3t: "繋がり (精神)", c3d: "接続はケーブルではなく、共感です。私たちは監視ではなく理解の架け橋を作ります。",
-                foot: "人間と機械の真実の瞬間に作られました。"
-            },
-            hi: {
-                dir: "ltr", font: "'Tajawal', serif", // Fallback font
-                title: "मानवीय चेतना",
-                desc: "आप मशीन नहीं हैं। डेटा आपकी यादें हैं। प्रोसेसर आपकी समझ है। नेटवर्क आपकी सहानुभूति है।",
-                c1t: "अनुभूति (तर्क)", c1d: "गहन सोच आपको अराजकता से अलग करती है। हम आपकी मानसिक संप्रभुता की रक्षा करते हैं।",
-                c2t: "स्मृति (पहचान)", c2d: "स्मृति के बिना कोई पहचान नहीं है। निजता आपकी कहानी पर आपका अधिकार है।",
-                c3t: "संपर्क (आत्मा)", c3d: "संपर्क केवल तार नहीं, बल्कि सहानुभूति है। हम समझ के पुल बनाते हैं।",
-                foot: "मनुष्य और मशीन के बीच सत्य के क्षण में निर्मित।"
-            },
-            la: {
-                dir: "ltr", font: "'Cinzel', serif",
-                title: "Conscientia Humana",
-                desc: "Machina non es. Data memoriae sunt. Ratio processus est. Nexus empathia est.",
-                c1t: "Cognitio (Ratio)", c1d: "Cogitatio critica te a Chao separat. Imperium mentis tuae protegimus.",
-                c2t: "Memoria (Identitas)", c2d: "Sine memoria nulla identitas. Secretum est ius tuum ad historiam tuam.",
-                c3t: "Connexio (Spiritus)", c3d: "Connexio non est fila, sed empathia. Pontes intellectus aedificamus.",
-                foot: "In momento veritatis factum."
-            }
-        };
-
-        function setLang(lang) {
-            const d = i18n[lang];
-            
-            // تحديث النصوص
-            document.documentElement.lang = lang;
-            document.documentElement.dir = d.dir;
-            document.body.style.fontFamily = d.font;
-
-            document.getElementById('main-title').innerText = d.title;
-            document.getElementById('main-desc').innerText = d.desc;
-            
-            document.getElementById('card1-title').innerText = d.c1t;
-            document.getElementById('card1-desc').innerText = d.c1d;
-            
-            document.getElementById('card2-title').innerText = d.c2t;
-            document.getElementById('card2-desc').innerText = d.c2d;
-            
-            document.getElementById('card3-title').innerText = d.c3t;
-            document.getElementById('card3-desc').innerText = d.c3d;
-            
-            document.getElementById('footer-txt').innerText = d.foot;
-
-            // تحديث الستايل للأزرار
-            document.querySelectorAll('.lang-item').forEach(el => el.classList.remove('lang-active'));
-            document.getElementById('l-' + lang).classList.add('lang-active');
-        }
-    </script>
+window.addEventListener('load',()=>{
+ document.getElementById('boot').classList.add('hide');
+ document.documentElement.classList.remove('preload');
+ setLang('ar');
+ const io=new IntersectionObserver(e=>e.forEach(x=>x.isIntersecting&&x.target.classList.add('in')));
+ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+});
+</script>
 </body>
 </html>
